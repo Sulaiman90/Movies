@@ -59,9 +59,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        View sbView = snackbar.getView();
-        TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(Color.RED);
+        snackbar = Snackbar.make(findViewById(R.id.movies_recycler_view),
+                getString(R.string.network_not_connected) ,Snackbar.LENGTH_INDEFINITE);
 
         mRecyclerView = findViewById(R.id.movies_recycler_view);
         mProgressBar =  findViewById(R.id.progress_bar);
@@ -131,9 +130,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showConnectionStatus(boolean isConnected){
-        String message = getString(R.string.network_not_connected);
         if(!isConnected) {
-            snackbar = Snackbar.make(findViewById(R.id.movies_recycler_view), message ,Snackbar.LENGTH_INDEFINITE);
+            View sbView = snackbar.getView();
+            TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.RED);
             snackbar.show();
         }
         else{
