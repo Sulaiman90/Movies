@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="no_network">No internet connection</string>
+
+    <!-- menus-->
+    <string name="action_sort">Sort</string>
+
+    <!-- network connection -->
+
+    <string name="network_connected">Connected to Internet</string>
+    <string name="network_not_connected">Not connected to internet</string>
+
+    <!-- Sort dialog -->
+    <string name="sort_dialog_title">Sort by</string>
+    <string name="sort_dialog_most_popular">most popular</string>
+    <string name="sort_dialog_highest_rated">highest rated</string>
+    <string name="sort_dialog_most_rated">most rated</string>
+
+
+</resources>

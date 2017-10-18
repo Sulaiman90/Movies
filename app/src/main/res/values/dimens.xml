@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="grid_column_width">90dp</dimen>
+    <dimen name="grid_vertical_spacing">10dp</dimen>
+    <dimen name="grid_horizontal_spacing">10dp</dimen>
+
+    <!-- Movie grid posters-->
+
+    <dimen name="card_title_height">40dp</dimen>
+    <dimen name="card_title_margin">8dp</dimen>
+
+    <dimen name="grid_recycler_view_margin">4dp</dimen>
+    <dimen name="card_view_margin">4dp</dimen>
+    <dimen name="card_view_elevation">100dp</dimen>
+    <dimen name="card_view_corner_radius">4dp</dimen>
+</resources>
