@@ -159,14 +159,10 @@ public class Movie implements Parcelable{
     public List<String> getMovieGenres() {
         List<String> genres = new ArrayList<>();
         int[] ids = getGenreIds();
-        int count = 0;
         for (int i=0; i<ids.length; i++) {
             MovieGenre genre = MovieGenre.getById(ids[i]);
             if (genre != null) {
-                count++;
-                if(count<=4) {
-                    genres.add(genre.getTitle());
-                }
+                genres.add(genre.getTitle());
             }
         }
         return genres;

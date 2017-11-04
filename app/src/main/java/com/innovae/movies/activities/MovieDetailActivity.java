@@ -1,5 +1,6 @@
 package com.innovae.movies.activities;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,15 @@ public class MovieDetailActivity extends AppCompatActivity {
     private Movie movie;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private AppBarLayout mAppBarLayout;
+    private TextView titleView;
+    private ImageView mPosterImageView;
+    private ImageView mBackdropImageView;
+
+    private ConstraintLayout mMovieTabLayout;
+    private int mPosterHeight;
+    private int mPosterWidth;
+    private int mBackdropHeight;
+    private int mBackdropWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +48,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         final Toolbar mToolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCollapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         mAppBarLayout = findViewById(R.id.app_bar);
@@ -59,8 +68,24 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
-        TextView titleView = findViewById(R.id.movie_title);
+        titleView = findViewById(R.id.movie_title);
         titleView.setText(movie_title);
+
+        mPosterWidth = (int) (getResources().getDisplayMetrics().widthPixels * 0.25);
+        mPosterHeight = (int) (mPosterWidth / 0.66);
+        mBackdropWidth = getResources().getDisplayMetrics().widthPixels;
+        mBackdropHeight = (int) (mBackdropWidth / 1.77);
+
+        mMovieTabLayout = findViewById(R.id.layout_movie);
+        //mMovieTabLayout.getLayoutParams().height = mBackdropHeight + (int) (mPosterHeight * 0.9);
+
+        mPosterImageView = findViewById(R.id.iv_poster);
+        mBackdropImageView =  findViewById(R.id.iv_backdrop);
+
+       /* mPosterImageView.getLayoutParams().width = mPosterWidth;
+        mPosterImageView.getLayoutParams().height = mPosterHeight;
+        mBackdropImageView.getLayoutParams().height = mBackdropHeight;*/
+
         loadMovieDetails();
     }
 
@@ -77,30 +102,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         TextView mOverview = findViewById(R.id.overview);
         mOverview.setText(movie.getPlotSynopsis());
 
-       setGenres(movie.getGenreIds());
+       setGenres();
     }
 
     private void loadBackdrop(String path) {
-        final ImageView imageView =  findViewById(R.id.iv_backdrop);
-        Picasso.with(this).load(path).into(imageView);
+        Picasso.with(this).load(path).into(mBackdropImageView);
     }
 
     private void loadPoster(String path) {
-        final ImageView imageView =  findViewById(R.id.iv_poster);
-        Picasso.with(this).load(path).into(imageView);
+        Picasso.with(this).load(path).into(mPosterImageView);
     }
 
-    private void setGenres(int[] genresList) {
-        String genres = "";
-       /* if (genresList != null) {
-            for (int i = 0; i < genresList.length; i++) {
-                if (i == genresList.length - 1) {
-                    genres = genres.concat(String.valueOf(MovieGenre.getById(genresList[i])));
-                } else {
-                    genres = genres.concat(String.valueOf(MovieGenre.getById(genresList[i])) + ", ");
-                }
-            }
-        }*/
+    private void setGenres() {
         TextView mGenre = findViewById(R.id.movie_genre);
         mGenre.setText(TextUtils.join(", ", movie.getMovieGenres()));
     }
