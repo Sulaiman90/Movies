@@ -17,4 +17,6 @@
     <string name="sort_dialog_most_rated">most rated</string>
 
 
+    <string name="plot_synopsis">Plot Synopsis</string>
+    <string name="trailers">Trailers</string>
 </resources>

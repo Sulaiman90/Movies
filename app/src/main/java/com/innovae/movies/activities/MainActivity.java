@@ -9,11 +9,13 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import com.innovae.movies.R;
 import com.innovae.movies.adapters.MoviesAdapter;
+import com.innovae.movies.adapters.MoviesAdapter.OnItemClickListener;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.dialog.SortDialogFragment;
 import com.innovae.movies.model.Movie;
@@ -33,6 +36,7 @@ import com.innovae.movies.rest.ApiInterface;
 import com.innovae.movies.util.Constants;
 import com.innovae.movies.util.Sort;
 import com.innovae.movies.util.SortHelper;
+import com.innovae.movies.util.Utility;
 
 import java.util.List;
 
@@ -40,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnItemClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -53,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver sortPreferenceReciever;
 
     private Snackbar snackbar;
+    private MoviesAdapter mMoviesAdapter;
+
+    private List<Movie> movies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +80,16 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        mMoviesAdapter = new MoviesAdapter(this, R.layout.list_item_movie,this);
+        mRecyclerView.setAdapter(mMoviesAdapter);
+
         boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
         //Log.d(TAG, "isConnected: " + isConnected);
         if (isConnected) {
             loadMovies();
         }
         else{
-            showConnectionStatus(isConnected);
+            showConnectionStatus(false);
         }
 
         connectionReceiver = new ConnectivityReceiver(new ConnectivityReceiver.ConnectivityReceiverCallback(){
@@ -106,8 +116,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+    }
 
-
+    @Override
+    public void onItemClick(int position) {
+        Utility.showDebugToast(this,""+position);
+        Movie movie =  movies.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.MOVIE_DATA, movie);
+        Intent detailIntent = new Intent(this, MovieDetailActivity.class);
+        detailIntent.putExtras(bundle);
+        startActivity(detailIntent);
     }
 
     @Override
@@ -154,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 mProgressBar.setVisibility(View.INVISIBLE);
-                List<Movie> movies = response.body().getResults();
-                mRecyclerView.setAdapter(new MoviesAdapter(movies,R.layout.list_item_movie,getApplicationContext()));
+                movies = response.body().getResults();
+                mMoviesAdapter.addMovies(movies);
                 Log.d(TAG, "Number of movies received: " + movies.size());
             }
 

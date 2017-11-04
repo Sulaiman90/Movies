@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.innovae.movies"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -33,10 +33,14 @@ dependencies {
     compile "com.android.support:design:${supportLibraryVersion}"
     compile "com.android.support:cardview-v7:${supportLibraryVersion}"
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }

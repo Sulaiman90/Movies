@@ -13,4 +13,15 @@
     <dimen name="card_view_margin">4dp</dimen>
     <dimen name="card_view_elevation">100dp</dimen>
     <dimen name="card_view_corner_radius">4dp</dimen>
+
+    <!-- Detail view -->
+
+    <dimen name="detail_backdrop_height">230dp</dimen>
+    <dimen name="detail_poster_width">120dp</dimen>
+    <dimen name="detail_poster_height">160dp</dimen>
+
+
+    <dimen name="card_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
 </resources>

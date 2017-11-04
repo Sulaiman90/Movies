@@ -12,9 +12,10 @@ import android.widget.TextView;
 import com.innovae.movies.R;
 import com.innovae.movies.adapters.MoviesAdapter.MovieViewHolder;
 import com.innovae.movies.model.Movie;
-import com.innovae.movies.util.MovieData;
+import com.innovae.movies.util.Utility;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collection;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
@@ -23,13 +24,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
     private int rowLayout;
     private Context context;
 
+    private static OnItemClickListener mOnClickListener;
 
-    public MoviesAdapter(List<Movie> movies, int rowLayout, Context context){
-        this.movies = movies;
-        this.rowLayout = rowLayout;
-        this.context = context;
+    public interface OnItemClickListener {
+         void onItemClick(int position);
     }
 
+    public MoviesAdapter(Context context, int rowLayout,OnItemClickListener listener){
+        this.rowLayout = rowLayout;
+        this.context = context;
+        mOnClickListener = listener;
+    }
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,25 +44,47 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-        String fullPosterPath = MovieData.buildCompletePosterPath(movies.get(position).getPosterPath());
+        String fullPosterPath = Utility.buildCompletePosterPath(movies.get(position).getPosterPath());
         Picasso.with(context).load(fullPosterPath).placeholder(R.drawable.placeholder_loading).into(holder.moviePoster);
+        //GlideApp.with(context).load(fullPosterPath).placeholder(R.drawable.placeholder_loading).into(holder.moviePoster);
         holder.movieTitle.setText(movies.get(position).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        if (null == movies){
+            return 0;
+        }
+        else{
+            return movies.size();
+        }
     }
 
-    public static class MovieViewHolder extends RecyclerView.ViewHolder{
+    public void addMovies(List<Movie> movies) {
+        if (this.movies == null) {
+            this.movies = movies;
+        } else {
+            this.movies.addAll(movies);
+        }
+        notifyDataSetChanged();
+    }
+
+
+    protected static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView moviePoster;
         TextView movieTitle;
 
-        public MovieViewHolder(View itemView) {
+        protected MovieViewHolder(View itemView) {
             super(itemView);
-            moviePoster =  itemView.findViewById(R.id.show_card_poster);
+            moviePoster = itemView.findViewById(R.id.show_card_poster);
             movieTitle = itemView.findViewById(R.id.show_card_title);
+            itemView.setOnClickListener(this); // bind the listener
+        }
+
+        @Override
+        public void onClick(View v) {
+            mOnClickListener.onItemClick(getAdapterPosition());
         }
     }
 }

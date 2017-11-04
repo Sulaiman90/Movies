@@ -6,6 +6,9 @@ public class Constants {
 
     public static final String IMAGE_LOADING_BASE_URL_185 = "https://image.tmdb.org/t/p/w185/";
     public static final String IMAGE_LOADING_BASE_URL_342 = "https://image.tmdb.org/t/p/w342/";
+    public static final String IMAGE_LOADING_BASE_URL_500 = "https://image.tmdb.org/t/p/w500/";
+
+    public static final String MOVIE_DATA = "movie";
 
 
 }
