@@ -77,14 +77,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         mBackdropHeight = (int) (mBackdropWidth / 1.77);
 
         mMovieTabLayout = findViewById(R.id.layout_movie);
-        //mMovieTabLayout.getLayoutParams().height = mBackdropHeight + (int) (mPosterHeight * 0.9);
 
         mPosterImageView = findViewById(R.id.iv_poster);
         mBackdropImageView =  findViewById(R.id.iv_backdrop);
-
-       /* mPosterImageView.getLayoutParams().width = mPosterWidth;
-        mPosterImageView.getLayoutParams().height = mPosterHeight;
-        mBackdropImageView.getLayoutParams().height = mBackdropHeight;*/
 
         loadMovieDetails();
     }
