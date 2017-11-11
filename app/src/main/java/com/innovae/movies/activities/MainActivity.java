@@ -66,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        snackbar = Snackbar.make(findViewById(R.id.movies_recycler_view),
-                getString(R.string.network_not_connected) ,Snackbar.LENGTH_INDEFINITE);
-
         mRecyclerView = findViewById(R.id.movies_recycler_view);
+
+        snackbar = Snackbar.make(mRecyclerView, getString(R.string.network_not_connected) ,Snackbar.LENGTH_INDEFINITE);
+
         mProgressBar =  findViewById(R.id.progress_bar);
 
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -80,15 +80,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mMoviesAdapter = new MoviesAdapter(this, R.layout.list_item_movie,this);
+        mMoviesAdapter = new MoviesAdapter(this, R.layout.item_movie,this);
         mRecyclerView.setAdapter(mMoviesAdapter);
 
         boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
         //Log.d(TAG, "isConnected: " + isConnected);
-        if (isConnected) {
-            loadMovies();
-        }
-        else{
+        if (!isConnected) {
             showConnectionStatus(false);
         }
 
@@ -121,6 +118,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public void onItemClick(int position) {
         Utility.showDebugToast(this,""+position);
+        boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
+        if(!isConnected){
+           return;
+        }
         Movie movie =  movies.get(position);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.MOVIE_DATA, movie);
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     public void loadMovies(){
 
+        Log.d(TAG, "loadMovies() ");
         mProgressBar.setVisibility(View.VISIBLE);
 
        // Log.d(TAG,"sort by "+SortHelper.getSortByPreference(this).toString());

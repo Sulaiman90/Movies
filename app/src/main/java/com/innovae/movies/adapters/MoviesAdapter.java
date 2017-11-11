@@ -46,7 +46,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         String fullPosterPath = Utility.buildCompletePosterPath(movies.get(position).getPosterPath());
         Picasso.with(context).load(fullPosterPath).placeholder(R.drawable.placeholder_loading).into(holder.moviePoster);
-        //GlideApp.with(context).load(fullPosterPath).placeholder(R.drawable.placeholder_loading).into(holder.moviePoster);
         holder.movieTitle.setText(movies.get(position).getTitle());
     }
 

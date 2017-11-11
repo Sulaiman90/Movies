@@ -1,8 +1,6 @@
 package com.innovae.movies.model;
 
-
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class MoviesResponse {
@@ -48,6 +46,4 @@ public class MoviesResponse {
     public void setResults(List<Movie> results) {
         this.results = results;
     }
-
-
 }

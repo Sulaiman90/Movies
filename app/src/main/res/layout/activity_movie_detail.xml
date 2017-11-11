@@ -1,6 +1,5 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
                                                  android:id="@+id/main_content"
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
@@ -67,6 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
                     android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:maxLines="2"
@@ -88,6 +88,7 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp"
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:text="Genre"
@@ -149,30 +150,45 @@
             android:padding="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/plot_synopsis"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/overview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"/>
+                android:layout_marginBottom="8dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/trailers"
+                android:id="@+id/tvTrailers"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp"
                 android:textStyle="normal"/>
 
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_movie_trailers"
+                android:nestedScrollingEnabled="false"
+                />
+
+            <View
+                android:id="@+id/view_horizontal_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/darker_gray"
+                android:visibility="visible" />
+
         </LinearLayout>
-
     </android.support.v4.widget.NestedScrollView>
-
 
 </android.support.design.widget.CoordinatorLayout>
