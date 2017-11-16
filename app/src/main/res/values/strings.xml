@@ -19,4 +19,7 @@
 
     <string name="plot_synopsis">Plot Synopsis</string>
     <string name="trailers">Trailers</string>
+    <string name="casts">Casts</string>
+    <string name="similiar_movies">Similiar Movies</string>
+
 </resources>

@@ -147,7 +147,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp">
+            >
 
             <TextView
                 android:layout_width="match_parent"
@@ -155,12 +155,18 @@
                 android:text="@string/plot_synopsis"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/black"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/overview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp" />
 
             <TextView
@@ -171,6 +177,9 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/black"
                 android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
                 android:textStyle="normal"/>
 
             <android.support.v7.widget.RecyclerView
@@ -184,9 +193,47 @@
                 android:id="@+id/view_horizontal_line"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
                 android:background="@android:color/darker_gray"
                 android:visibility="visible" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/casts"
+                android:id="@+id/tvCasts"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textStyle="normal"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_movie_casts"
+                android:nestedScrollingEnabled="false"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/similiar_movies"
+                android:id="@+id/tvSimiliarMovies"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textStyle="normal"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_similar_movies"
+                android:nestedScrollingEnabled="false"
+                />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

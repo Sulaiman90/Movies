@@ -1,5 +1,6 @@
 package com.innovae.movies.activities;
 
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,11 +16,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.innovae.movies.R;
+import com.innovae.movies.adapters.MovieCastsAdapter;
+import com.innovae.movies.adapters.MoviesAdapter;
+import com.innovae.movies.adapters.MoviesAdapter.OnItemClickListener;
 import com.innovae.movies.adapters.TrailersAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.model.Movie;
+import com.innovae.movies.model.MovieCast;
+import com.innovae.movies.model.MovieCreditsResponse;
 import com.innovae.movies.model.MovieGenre;
 import com.innovae.movies.model.MovieVideoResponse;
+import com.innovae.movies.model.SimiliarMoviesResponse;
 import com.innovae.movies.model.Video;
 import com.innovae.movies.rest.ApiClient;
 import com.innovae.movies.rest.ApiInterface;
@@ -34,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements OnItemClickListener {
 
     private Movie movie;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -51,6 +58,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     private int mBackdropHeight;
     private int mBackdropWidth;
     private Call<MovieVideoResponse> movieVideoResponseCall;
+    private Call<MovieCreditsResponse> movieCreditsResponseCall;
+    private Call<SimiliarMoviesResponse> movieSimiliarResponseCall;
+
+    private List<Movie> mMovies;
 
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
 
@@ -115,8 +126,10 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
 
-        if(isConnected){
+        if(isConnected && movie.getId()!=null){
             setTrailers();
+            setCasts();
+            setSimiliarMovies();
         }
     }
 
@@ -155,6 +168,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieVideoResponseCall.enqueue(new Callback<MovieVideoResponse>() {
             @Override
             public void onResponse(Call<MovieVideoResponse> call, Response<MovieVideoResponse> response) {
+                Log.d(TAG, " response: " + response.isSuccessful());
                 if (!response.isSuccessful()) {
                     movieVideoResponseCall = call.clone();
                     movieVideoResponseCall.enqueue(this);
@@ -181,6 +195,105 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    private void setCasts(){
+        final List<MovieCast> mCasts = new ArrayList<>();
+        final MovieCastsAdapter castsAdapter = new MovieCastsAdapter(this,mCasts);
+        RecyclerView mCastRecyclerView = findViewById(R.id.rv_movie_casts);
+        mCastRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        mCastRecyclerView.setAdapter(castsAdapter);
+
+        final TextView mCastView = findViewById(R.id.tvCasts);
+
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        movieCreditsResponseCall =
+                apiInterface.getMovieCredits(movie.getId(),Constants.MOVIE_DB_API_KEY);
+        movieCreditsResponseCall.enqueue(new Callback<MovieCreditsResponse>() {
+            @Override
+            public void onResponse(Call<MovieCreditsResponse> call, Response<MovieCreditsResponse> response) {
+               // Log.d(TAG, " response: " + response.isSuccessful());
+                if (!response.isSuccessful()) {
+                     movieCreditsResponseCall = call.clone();
+                     movieCreditsResponseCall.enqueue(this);
+                    return;
+                }
+                if (response.body() == null) return;
+                if (response.body().getCasts() == null) return;
+
+                for(MovieCast movieCast:response.body().getCasts()){
+                    if(movieCast != null && movieCast.getName()!=null && movieCast.getProfilePath()!=null){
+                        mCasts.add(movieCast);
+                    }
+                }
+                //Log.d(TAG, "Number of casts received: " + mCasts.size());
+                castsAdapter.notifyDataSetChanged();
+                if (!mCasts.isEmpty())
+                    mCastView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<MovieCreditsResponse> call, Throwable t) {
+                //Log.d(TAG, " onFailure: " +t.getMessage() );
+            }
+        });
+    }
+
+    private void setSimiliarMovies(){
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        movieSimiliarResponseCall = apiInterface.getSimiliarMovies(movie.getId(),Constants.MOVIE_DB_API_KEY);
+
+        final MoviesAdapter moviesAdapter = new MoviesAdapter(this,R.layout.item_movie, this);
+
+        mMovies = new ArrayList<>();
+
+        RecyclerView mSimiliarMovies = findViewById(R.id.rv_similar_movies);
+        final TextView mSimiliarMoviesTv = findViewById(R.id.tvSimiliarMovies);
+
+        mSimiliarMovies.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        mSimiliarMovies.setAdapter(moviesAdapter);
+
+        movieSimiliarResponseCall.enqueue(new Callback<SimiliarMoviesResponse>() {
+            @Override
+            public void onResponse(Call<SimiliarMoviesResponse> call, Response<SimiliarMoviesResponse> response) {
+                if (!response.isSuccessful()) {
+                    movieSimiliarResponseCall = call.clone();
+                    movieSimiliarResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getResults() == null) return;
+
+                for(Movie movie:response.body().getResults()){
+                    if(movie!= null && movie.getTitle()!=null && movie.getPosterPath()!=null){
+                        mMovies.add(movie);
+                    }
+                }
+                if (!mMovies.isEmpty())
+                    mSimiliarMoviesTv.setVisibility(View.VISIBLE);
+                moviesAdapter.addMovies(mMovies);
+            }
+
+            @Override
+            public void onFailure(Call<SimiliarMoviesResponse> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
+        if(!isConnected){
+            return;
+        }
+        Movie movie =  mMovies.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.MOVIE_DATA, movie);
+        Intent detailIntent = new Intent(this, MovieDetailActivity.class);
+        detailIntent.putExtras(bundle);
+        startActivity(detailIntent);
     }
 }

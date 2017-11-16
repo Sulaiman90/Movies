@@ -27,4 +27,8 @@ public final class Utility {
         return Uri.parse(Constants.YOUTUBE_WATCH_BASE_URL + trailerKey);
     }
 
+    public static String buildCastImagePath(String path){
+        return Constants.IMAGE_LOADING_BASE_URL_342 + path;
+    }
+
 }
