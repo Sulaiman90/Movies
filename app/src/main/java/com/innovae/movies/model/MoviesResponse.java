@@ -14,7 +14,6 @@ public class MoviesResponse {
     @SerializedName("results")
     private List<Movie> results;
 
-
     public int getPage() {
         return page;
     }
@@ -46,4 +45,6 @@ public class MoviesResponse {
     public void setResults(List<Movie> results) {
         this.results = results;
     }
+
+
 }

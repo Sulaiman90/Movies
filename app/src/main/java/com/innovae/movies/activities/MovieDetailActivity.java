@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.innovae.movies.R;
 import com.innovae.movies.adapters.MovieCastsAdapter;
 import com.innovae.movies.adapters.MoviesAdapter;
-import com.innovae.movies.adapters.MoviesAdapter.OnItemClickListener;
 import com.innovae.movies.adapters.TrailersAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.model.Movie;
@@ -41,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieDetailActivity extends AppCompatActivity implements OnItemClickListener {
+public class MovieDetailActivity extends AppCompatActivity {
 
     private Movie movie;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -243,9 +242,9 @@ public class MovieDetailActivity extends AppCompatActivity implements OnItemClic
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         movieSimiliarResponseCall = apiInterface.getSimiliarMovies(movie.getId(),Constants.MOVIE_DB_API_KEY);
 
-        final MoviesAdapter moviesAdapter = new MoviesAdapter(this,R.layout.item_movie, this);
-
         mMovies = new ArrayList<>();
+
+        final MoviesAdapter moviesAdapter = new MoviesAdapter(this,R.layout.item_movie, mMovies);
 
         RecyclerView mSimiliarMovies = findViewById(R.id.rv_similar_movies);
         final TextView mSimiliarMoviesTv = findViewById(R.id.tvSimiliarMovies);
@@ -265,14 +264,14 @@ public class MovieDetailActivity extends AppCompatActivity implements OnItemClic
                 if (response.body() == null) return;
                 if (response.body().getResults() == null) return;
 
-                for(Movie movie:response.body().getResults()){
-                    if(movie!= null && movie.getTitle()!=null && movie.getPosterPath()!=null){
+                for (Movie movie : response.body().getResults()) {
+                    if (movie != null && movie.getTitle() != null && movie.getPosterPath() != null) {
                         mMovies.add(movie);
                     }
                 }
                 if (!mMovies.isEmpty())
                     mSimiliarMoviesTv.setVisibility(View.VISIBLE);
-                moviesAdapter.addMovies(mMovies);
+                moviesAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -280,20 +279,6 @@ public class MovieDetailActivity extends AppCompatActivity implements OnItemClic
 
             }
         });
-
     }
 
-    @Override
-    public void onItemClick(int position) {
-        boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
-        if(!isConnected){
-            return;
-        }
-        Movie movie =  mMovies.get(position);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.MOVIE_DATA, movie);
-        Intent detailIntent = new Intent(this, MovieDetailActivity.class);
-        detailIntent.putExtras(bundle);
-        startActivity(detailIntent);
-    }
 }

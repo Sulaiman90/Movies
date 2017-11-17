@@ -2,7 +2,10 @@ package com.innovae.movies.adapters;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.innovae.movies.R;
+import com.innovae.movies.activities.MainActivity;
+import com.innovae.movies.activities.MovieDetailActivity;
 import com.innovae.movies.adapters.MoviesAdapter.MovieViewHolder;
+import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.model.Movie;
+import com.innovae.movies.util.Constants;
 import com.innovae.movies.util.Utility;
 import com.squareup.picasso.Picasso;
 
@@ -20,20 +27,17 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
 
-    private List<Movie> movies;
+    private List<Movie> mMovies;
     private int rowLayout;
     private Context context;
 
-    private static OnItemClickListener mOnClickListener;
+    private static final String TAG = MoviesAdapter.class.getSimpleName();
 
-    public interface OnItemClickListener {
-         void onItemClick(int position);
-    }
 
-    public MoviesAdapter(Context context, int rowLayout,OnItemClickListener listener){
+    public MoviesAdapter(Context context, int rowLayout,List<Movie> movies){
         this.rowLayout = rowLayout;
         this.context = context;
-        mOnClickListener = listener;
+        this.mMovies = movies;
     }
 
     @Override
@@ -44,37 +48,22 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-        String fullPosterPath = Utility.buildCompletePosterPath(movies.get(position).getPosterPath());
+        String fullPosterPath = Utility.buildCompletePosterPath(mMovies.get(position).getPosterPath());
         Picasso.with(context).load(fullPosterPath).placeholder(R.drawable.placeholder_loading).into(holder.moviePoster);
-        holder.movieTitle.setText(movies.get(position).getTitle());
+        holder.movieTitle.setText(mMovies.get(position).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        if (null == movies){
-            return 0;
-        }
-        else{
-            return movies.size();
-        }
+        return mMovies.size();
     }
 
-    public void addMovies(List<Movie> movies) {
-        if (this.movies == null) {
-            this.movies = movies;
-        } else {
-            this.movies.addAll(movies);
-        }
-        notifyDataSetChanged();
-    }
-
-
-    protected static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView moviePoster;
         TextView movieTitle;
 
-        protected MovieViewHolder(View itemView) {
+        public MovieViewHolder(View itemView) {
             super(itemView);
             moviePoster = itemView.findViewById(R.id.show_card_poster);
             movieTitle = itemView.findViewById(R.id.show_card_title);
@@ -83,7 +72,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
 
         @Override
         public void onClick(View v) {
-            mOnClickListener.onItemClick(getAdapterPosition());
+            boolean isConnected = ConnectivityReceiver.isConnected(context);
+            if(!isConnected){
+                return;
+            }
+            Movie movie =  mMovies.get(getAdapterPosition());
+            Log.d(TAG,"position "+getAdapterPosition() + " title "+movie.getTitle());
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(Constants.MOVIE_DATA, movie);
+            Intent detailIntent = new Intent(context, MovieDetailActivity.class);
+            detailIntent.putExtras(bundle);
+            context.startActivity(detailIntent);
         }
     }
 }
