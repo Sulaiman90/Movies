@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.support.design.widget.Snackbar;
@@ -84,8 +85,14 @@ public class MainActivity extends AppCompatActivity {
 
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
-        mLayoutManager = new GridLayoutManager(getApplicationContext(),
-                getResources().getInteger((R.integer.grid_columns)));
+        if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE){
+            mLayoutManager = new GridLayoutManager(getApplicationContext(),
+                    getResources().getInteger((R.integer.grid_columns_landscape)));
+        }
+        else if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
+            mLayoutManager = new GridLayoutManager(getApplicationContext(),
+                    getResources().getInteger((R.integer.grid_columns_portrait)));
+        }
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -173,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadMovies(){
-        Log.d(TAG, "loadMovies()");
+       // Log.d(TAG, "loadMovies()");
         if (pagesOver) return;
 
         mProgressBar.setVisibility(View.VISIBLE);
