@@ -183,8 +183,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                     if (video != null && video.getSite() != null && video.getSite().equals("YouTube") && video.getType() != null && video.getType().equals("Trailer"))
                         mTrailers.add(video);
                 }
-                if (!mTrailers.isEmpty())
-                    mTrailerView.setVisibility(View.VISIBLE);
+                if (mTrailers.isEmpty())
+                    mTrailerView.setVisibility(View.GONE);
                 //Log.d(TAG,"mTrailers "+mTrailers);
                 mTrailerAdapter.notifyDataSetChanged();
             }
@@ -227,8 +227,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
                 //Log.d(TAG, "Number of casts received: " + mCasts.size());
                 castsAdapter.notifyDataSetChanged();
-                if (!mCasts.isEmpty())
-                    mCastView.setVisibility(View.VISIBLE);
+                if (mCasts.isEmpty())
+                    mCastView.setVisibility(View.GONE);
             }
 
             @Override
@@ -269,8 +269,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                         mMovies.add(movie);
                     }
                 }
-                if (!mMovies.isEmpty())
-                    mSimiliarMoviesTv.setVisibility(View.VISIBLE);
+                if (mMovies.isEmpty())
+                    mSimiliarMoviesTv.setVisibility(View.GONE);
                 moviesAdapter.notifyDataSetChanged();
             }
 

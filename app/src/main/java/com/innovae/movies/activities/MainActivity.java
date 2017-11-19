@@ -144,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
                 if(action.equals(SortDialogFragment.BROADCAST_SORT_PREFERENCE_CHANGED)){
                     //mRecyclerView.smoothScrollToPosition(0);
                     if(ConnectivityReceiver.isConnected(getApplicationContext())){
+                        mMovies.clear();
+                        presentPage = 1;
                         loadMovies();
                     }
                 }
