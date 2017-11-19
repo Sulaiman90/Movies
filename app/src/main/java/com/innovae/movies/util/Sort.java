@@ -4,9 +4,10 @@ import android.support.annotation.NonNull;
 
 public enum Sort {
 
+
     MOST_POPULAR("popularity.desc"),
-    HIGHEST_RATED("vote_average.desc"),
-    MOST_RATED("vote_count.desc");
+    MOST_RATED("vote_count.desc"),
+    UPCOMING("release_date.desc");
 
     private String value;
 

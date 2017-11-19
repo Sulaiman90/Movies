@@ -12,9 +12,10 @@
 
     <!-- Sort dialog -->
     <string name="sort_dialog_title">Sort by</string>
-    <string name="sort_dialog_most_popular">most popular</string>
-    <string name="sort_dialog_highest_rated">highest rated</string>
-    <string name="sort_dialog_most_rated">most rated</string>
+    <string name="sort_dialog_upcoming">Upcoming</string>
+    <string name="sort_dialog_most_popular">Most Popular</string>
+    <string name="sort_dialog_highest_rated">Highest rated</string>
+    <string name="sort_dialog_most_rated">Top rated</string>
 
 
     <string name="plot_synopsis">Plot Synopsis</string>

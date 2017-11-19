@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Movie> mMovies;
 
     private GridLayoutManager mLayoutManager;
-    private int presentPage = 1;
 
+    private int presentPage = 1;
     private int previousTotal = 0;
     private boolean loading = true;
     private int visibleThreshold = 5;
@@ -102,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
                 visibleItemCount = mLayoutManager.getChildCount();
                 firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
+                //Log.d(TAG, " loading " + loading);
+                //Log.d(TAG, " totalItemCount " + totalItemCount + " previousTotal " + previousTotal);
+                /*Log.d(TAG, " value " +  ((totalItemCount - visibleItemCount)
+                        <= (firstVisibleItem + visibleThreshold)));*/
+
                 if (loading) {
                     if (totalItemCount > previousTotal) {
                         loading = false;
@@ -142,9 +147,11 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if(action.equals(SortDialogFragment.BROADCAST_SORT_PREFERENCE_CHANGED)){
-                    //mRecyclerView.smoothScrollToPosition(0);
+                   // mRecyclerView.smoothScrollToPosition(0);
                     if(ConnectivityReceiver.isConnected(getApplicationContext())){
                         mMovies.clear();
+                        previousTotal = 0;
+                        loading = true;
                         presentPage = 1;
                         loadMovies();
                     }
@@ -180,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
-                Log.d(TAG, "presentPage "+presentPage  +" "+ mMovies.size());
+                Log.d(TAG, "presentPage "+presentPage  +" old size "+ mMovies.size());
                 mProgressBar.setVisibility(View.INVISIBLE);
 
                 if(response.body() == null) return;
@@ -197,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                     pagesOver = true;
                 else
                     presentPage++;
-                Log.d(TAG, "Number of movies received: " + mMovies.size());
+                Log.d(TAG, "totalPages " + response.body().getTotalPages() + " Movies received: " + mMovies.size());
             }
 
             @Override

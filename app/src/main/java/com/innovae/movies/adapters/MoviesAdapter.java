@@ -33,7 +33,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
 
     private static final String TAG = MoviesAdapter.class.getSimpleName();
 
-
     public MoviesAdapter(Context context, int rowLayout,List<Movie> movies){
         this.rowLayout = rowLayout;
         this.context = context;
