@@ -7,6 +7,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -33,7 +34,10 @@ import com.innovae.movies.util.Constants;
 import com.innovae.movies.util.Utility;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -107,19 +111,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         titleView = findViewById(R.id.movie_title);
         titleView.setText(movie_title);
 
-        mPosterWidth = (int) (getResources().getDisplayMetrics().widthPixels * 0.25);
-        mPosterHeight = (int) (mPosterWidth / 0.66);
-        mBackdropWidth = getResources().getDisplayMetrics().widthPixels;
-        mBackdropHeight = (int) (mBackdropWidth / 1.77);
-
         mMovieTabLayout = findViewById(R.id.layout_movie);
         mPosterImageView = findViewById(R.id.iv_poster);
         mBackdropImageView =  findViewById(R.id.iv_backdrop);
-
-      /*  mMovieTabLayout.getLayoutParams().height = mBackdropHeight + (int) (mPosterHeight * 0.9);
-        mBackdropImageView.getLayoutParams().height = mBackdropHeight;
-        mPosterImageView.getLayoutParams().width = mPosterWidth;
-        mPosterImageView.getLayoutParams().height = mPosterHeight;*/
 
         loadMovieDetails();
 
@@ -140,7 +134,23 @@ public class MovieDetailActivity extends AppCompatActivity {
         Picasso.with(this).load(posterPath).into(mPosterImageView);
 
         TextView mReleaseDate = findViewById(R.id.movie_release_date);
-        mReleaseDate.setText(movie.getReleaseDate());
+
+        String releaseString = movie.getReleaseDate();
+
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("MMM d, yyyy");
+
+        Date releaseDate;
+        if (releaseString != null && !releaseString.trim().isEmpty()) {
+            try {
+                releaseDate = sdf1.parse(releaseString);
+                releaseString = sdf2.format(releaseDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        mReleaseDate.setText(releaseString);
 
         TextView mRating = findViewById(R.id.movie_rating);
         mRating.setText(movie.getRating().toString() + "/10");
@@ -156,6 +166,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         final TrailersAdapter mTrailerAdapter = new TrailersAdapter(this,R.layout.item_trailer,mTrailers);
         RecyclerView mTrailerRecyclerView = findViewById(R.id.rv_movie_trailers);
+        new LinearSnapHelper().attachToRecyclerView(mTrailerRecyclerView);
         mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         mTrailerRecyclerView.setAdapter(mTrailerAdapter);
 

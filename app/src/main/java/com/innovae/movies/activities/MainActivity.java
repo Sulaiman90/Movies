@@ -8,14 +8,24 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +38,8 @@ import com.innovae.movies.R;
 import com.innovae.movies.adapters.MoviesAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.dialog.SortDialogFragment;
+import com.innovae.movies.fragments.MoviesFragment;
+import com.innovae.movies.fragments.PreferencesFragment;
 import com.innovae.movies.model.Movie;
 import com.innovae.movies.model.MoviesResponse;
 import com.innovae.movies.rest.ApiClient;
@@ -43,217 +55,42 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    private RecyclerView mRecyclerView;
-    private ProgressBar mProgressBar;
-    private ApiInterface apiInterface;
-
-    private BroadcastReceiver connectionReceiver;
-    private BroadcastReceiver sortPreferenceReciever;
-
-    private Snackbar snackbar;
-    private MoviesAdapter mMoviesAdapter;
-    private List<Movie> mMovies;
-
-    private GridLayoutManager mLayoutManager;
-
-    private int presentPage = 1;
-    private int previousTotal = 0;
-    private boolean loading = true;
-    private int visibleThreshold = 5;
-    int firstVisibleItem, visibleItemCount, totalItemCount;
-
-    private Call<MoviesResponse> moviesResponseCall;
-
-    private boolean pagesOver = false;
+    private int previousSelectedMenuId = R.id.nav_movies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMovies = new ArrayList<>();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        mRecyclerView = findViewById(R.id.movies_recycler_view);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-        snackbar = Snackbar.make(mRecyclerView, getString(R.string.network_not_connected) ,Snackbar.LENGTH_INDEFINITE);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        mProgressBar =  findViewById(R.id.progress_bar);
+        navigationView.setCheckedItem(R.id.nav_movies);
 
-        apiInterface = ApiClient.getClient().create(ApiInterface.class);
-
-        if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE){
-            mLayoutManager = new GridLayoutManager(getApplicationContext(),
-                    getResources().getInteger((R.integer.grid_columns_landscape)));
-        }
-        else if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
-            mLayoutManager = new GridLayoutManager(getApplicationContext(),
-                    getResources().getInteger((R.integer.grid_columns_portrait)));
-        }
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mMoviesAdapter = new MoviesAdapter(this, R.layout.item_movie, mMovies);
-        mRecyclerView.setAdapter(mMoviesAdapter);
-
-        mRecyclerView.addOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                totalItemCount = mLayoutManager.getItemCount();
-                visibleItemCount = mLayoutManager.getChildCount();
-                firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
-
-                //Log.d(TAG, " loading " + loading);
-                //Log.d(TAG, " totalItemCount " + totalItemCount + " previousTotal " + previousTotal);
-                /*Log.d(TAG, " value " +  ((totalItemCount - visibleItemCount)
-                        <= (firstVisibleItem + visibleThreshold)));*/
-
-                if (loading) {
-                    if (totalItemCount > previousTotal) {
-                        loading = false;
-                        previousTotal = totalItemCount;
-                    }
-                }
-                if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-                     loadMovies();
-                     loading = true;
-                }
-            }
-        });
-
-        boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
-        Log.d(TAG, "onCreate : isConnected: " + isConnected);
-        if (!isConnected) {
-            showConnectionStatus(false);
-        }
-        else{
-            //loadMovies();
-        }
-
-        connectionReceiver = new ConnectivityReceiver(new ConnectivityReceiver.ConnectivityReceiverCallback(){
-
-            @Override
-            public void connectionChanged(Boolean isConnected) {
-                //Toast.makeText(getApplicationContext(),"isConnected "+isConnected,Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "connectionChanged: isConnected: " + isConnected);
-                showConnectionStatus(isConnected);
-                if (isConnected && presentPage==1) {
-                        loadMovies();
-                }
-            }
-        });
-
-        sortPreferenceReciever = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if(action.equals(SortDialogFragment.BROADCAST_SORT_PREFERENCE_CHANGED)){
-                   // mRecyclerView.smoothScrollToPosition(0);
-                    if(ConnectivityReceiver.isConnected(getApplicationContext())){
-                        mMovies.clear();
-                        previousTotal = 0;
-                        loading = true;
-                        presentPage = 1;
-                        loadMovies();
-                    }
-                }
-            }
-        };
-    }
-
-    public void showConnectionStatus(boolean isConnected){
-        if(!isConnected) {
-            View sbView = snackbar.getView();
-            TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
-            textView.setTextColor(Color.RED);
-            snackbar.show();
-        }
-        else{
-            snackbar.dismiss();
-        }
-    }
-
-    public void loadMovies(){
-       // Log.d(TAG, "loadMovies()");
-        if (pagesOver) return;
-
-        mProgressBar.setVisibility(View.VISIBLE);
-
-       // Log.d(TAG,"sort by "+SortHelper.getSortByPreference(this).toString());
-
-        moviesResponseCall = apiInterface.discoverMovies(Constants.MOVIE_DB_API_KEY,
-                SortHelper.getSortByPreference(this).toString(),presentPage);
-
-        moviesResponseCall.enqueue(new Callback<MoviesResponse>() {
-            @Override
-            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-
-                Log.d(TAG, "presentPage "+presentPage  +" old size "+ mMovies.size());
-                mProgressBar.setVisibility(View.INVISIBLE);
-
-                if(response.body() == null) return;
-                if(response.body().getResults() == null) return;
-
-                for(Movie movie:response.body().getResults()){
-                    if(movie != null && movie.getTitle() != null && movie.getPosterPath() != null){
-                        mMovies.add(movie);
-                    }
-                }
-
-                mMoviesAdapter.notifyDataSetChanged();
-                if (response.body().getPage() == response.body().getTotalPages())
-                    pagesOver = true;
-                else
-                    presentPage++;
-                Log.d(TAG, "totalPages " + response.body().getTotalPages() + " Movies received: " + mMovies.size());
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-               Log.d(TAG, t.toString());
-            }
-        });
+        setTitle(R.string.movies);
+        setFragment(new MoviesFragment());
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        mMoviesAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG,"onPause");
-        if (this.connectionReceiver!=null){
-            unregisterReceiver(connectionReceiver);
-        }
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(sortPreferenceReciever);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG,"onResume");
-        registerReceiver(connectionReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SortDialogFragment.BROADCAST_SORT_PREFERENCE_CHANGED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(sortPreferenceReciever,intentFilter);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(moviesResponseCall != null){
-            moviesResponseCall.cancel();
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -274,8 +111,49 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setFragment(Fragment fragment) {
+       FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_activity_fragment_container, fragment);
+        fragmentTransaction.commit();
+    }
+
     private void showSortByDialog() {
         DialogFragment sortingDialogFragment = new SortDialogFragment();
         sortingDialogFragment.show(getFragmentManager(), SortDialogFragment.TAG);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        int id = item.getItemId();
+
+        if(id == previousSelectedMenuId){
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
+
+        if (id == R.id.nav_movies) {
+            setTitle(R.string.movies);
+            setFragment(new MoviesFragment());
+        } else if (id == R.id.nav_favourites) {
+
+        } else if (id == R.id.nav_settings) {
+            setTitle(R.string.settings);
+            setFragment(new PreferencesFragment());
+        }
+        else if (id == R.id.nav_share) {
+
+        }
+        else if (id == R.id.nav_send) {
+
+        }
+
+        previousSelectedMenuId = id;
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

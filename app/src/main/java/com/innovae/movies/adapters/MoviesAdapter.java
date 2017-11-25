@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.innovae.movies.R;
-import com.innovae.movies.activities.MainActivity;
 import com.innovae.movies.activities.MovieDetailActivity;
 import com.innovae.movies.adapters.MoviesAdapter.MovieViewHolder;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
@@ -66,7 +65,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
             super(itemView);
             moviePoster = itemView.findViewById(R.id.show_card_poster);
             movieTitle = itemView.findViewById(R.id.show_card_title);
-            itemView.setOnClickListener(this); // bind the listener
+
+            double moviePosterWidth =  context.getResources().getDisplayMetrics().widthPixels * 0.31;
+            moviePoster.getLayoutParams().width =  (int) moviePosterWidth;
+            moviePoster.getLayoutParams().height = (int) (moviePosterWidth * 1.51);
+
+            Log.d(TAG,"moviePosterWidth "+moviePosterWidth+" "+moviePoster.getLayoutParams().height);
+
+            itemView.setOnClickListener(this);
         }
 
         @Override
