@@ -11,8 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.innovae.movies.R;
+import com.innovae.movies.util.PreferenceUtil;
 import com.innovae.movies.util.Sort;
-import com.innovae.movies.util.SortHelper;
+
 
 public class SortDialogFragment extends DialogFragment {
 
@@ -30,11 +31,11 @@ public class SortDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
        final AlertDialog.Builder sortDialog = new AlertDialog.Builder(getActivity());
         sortDialog.setTitle(getString(R.string.sort_dialog_title));
-        sortDialog.setSingleChoiceItems(R.array.pref_sort_by_labels, SortHelper.getSortByPreference(getActivity()).ordinal(),
+        sortDialog.setSingleChoiceItems(R.array.pref_sort_by_labels, PreferenceUtil.getSortByPreference(getActivity()).ordinal(),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
-                        SortHelper.saveSortByPreference(Sort.values()[which]);
+                        PreferenceUtil.saveSortByPreference(Sort.values()[which]);
                         sendSortPreferenceChangedBroadcast();
                         dialogInterface.dismiss();
                     }

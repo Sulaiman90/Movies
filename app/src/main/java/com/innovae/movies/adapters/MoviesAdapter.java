@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import com.innovae.movies.R;
@@ -29,6 +30,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
     private List<Movie> mMovies;
     private int rowLayout;
     private Context context;
+    public final static int All_MOVIES = 1;
+    public final static int SIMILAR_MOVIES = 2;
+    private int mType = All_MOVIES;
 
     private static final String TAG = MoviesAdapter.class.getSimpleName();
 
@@ -36,6 +40,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
         this.rowLayout = rowLayout;
         this.context = context;
         this.mMovies = movies;
+    }
+
+    public MoviesAdapter(Context context, int rowLayout,List<Movie> movies,int type){
+        this.rowLayout = rowLayout;
+        this.context = context;
+        this.mMovies = movies;
+        mType = type;
     }
 
     @Override
@@ -67,10 +78,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
             movieTitle = itemView.findViewById(R.id.show_card_title);
 
             double moviePosterWidth =  context.getResources().getDisplayMetrics().widthPixels * 0.31;
-            moviePoster.getLayoutParams().width =  (int) moviePosterWidth;
-            moviePoster.getLayoutParams().height = (int) (moviePosterWidth * 1.51);
 
-            Log.d(TAG,"moviePosterWidth "+moviePosterWidth+" "+moviePoster.getLayoutParams().height);
+            if(mType == SIMILAR_MOVIES){
+                moviePoster.getLayoutParams().width =  (int) moviePosterWidth;
+                moviePoster.getLayoutParams().height = (int) (moviePosterWidth * 1.51);
+            }
+
+            //Log.d(TAG,"moviePosterWidth "+moviePosterWidth+" "+moviePoster.getLayoutParams().height);
 
             itemView.setOnClickListener(this);
         }
@@ -82,7 +96,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
                 return;
             }
             Movie movie =  mMovies.get(getAdapterPosition());
-            Log.d(TAG,"position "+getAdapterPosition() + " title "+movie.getTitle());
+           // Log.d(TAG,"position "+getAdapterPosition() + " title "+movie.getTitle());
             Bundle bundle = new Bundle();
             bundle.putParcelable(Constants.MOVIE_DATA, movie);
             Intent detailIntent = new Intent(context, MovieDetailActivity.class);

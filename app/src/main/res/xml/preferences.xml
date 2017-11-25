@@ -9,7 +9,7 @@
             android:key="@string/lang_key"
             android:entries="@array/entries_lang_preference"
             android:entryValues="@array/entry_values_lang_preference"
-            android:defaultValue="@string/pref_lang_english_value"
+            android:defaultValue="@string/pref_lang_default_value"
             android:dialogTitle="@string/dialog_lang_title_preference"
             android:summary="%s"/>
     </PreferenceCategory>

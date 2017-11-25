@@ -45,7 +45,6 @@ import com.innovae.movies.model.MoviesResponse;
 import com.innovae.movies.rest.ApiClient;
 import com.innovae.movies.rest.ApiInterface;
 import com.innovae.movies.util.Constants;
-import com.innovae.movies.util.SortHelper;
 import com.innovae.movies.util.Utility;
 
 import java.util.ArrayList;
@@ -123,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         sortingDialogFragment.show(getFragmentManager(), SortDialogFragment.TAG);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -138,7 +136,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_movies) {
             setTitle(R.string.movies);
             setFragment(new MoviesFragment());
-        } else if (id == R.id.nav_favourites) {
+        }
+        else if (id == R.id.nav_favourites) {
 
         } else if (id == R.id.nav_settings) {
             setTitle(R.string.settings);

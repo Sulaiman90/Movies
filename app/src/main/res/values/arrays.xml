@@ -10,16 +10,17 @@
     <string-array name="entries_lang_preference">
         <item>@string/pref_lang_english_entry</item>
         <item>@string/pref_lang_french_entry</item>
+        <item>@string/pref_lang_russia_entry</item>
         <item>@string/pref_lang_hindi_entry</item>
         <item>@string/pref_lang_tamil_entry</item>
         <item>@string/pref_lang_malayalam_entry</item>
         <item>@string/pref_lang_telugu_entry</item>
     </string-array>
 
-
     <string-array name="entry_values_lang_preference">
         <item>@string/pref_lang_english_value</item>
         <item>@string/pref_lang_french_value</item>
+        <item>@string/pref_lang_russia_value</item>
         <item>@string/pref_lang_hindi_value</item>
         <item>@string/pref_lang_tamil_value</item>
         <item>@string/pref_lang_malayalam_value</item>

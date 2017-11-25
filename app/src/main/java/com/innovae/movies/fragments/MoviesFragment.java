@@ -34,7 +34,7 @@ import com.innovae.movies.model.MoviesResponse;
 import com.innovae.movies.rest.ApiClient;
 import com.innovae.movies.rest.ApiInterface;
 import com.innovae.movies.util.Constants;
-import com.innovae.movies.util.SortHelper;
+import com.innovae.movies.util.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +129,7 @@ public class MoviesFragment extends Fragment {
         });
 
         boolean isConnected = ConnectivityReceiver.isConnected(getContext());
-        Log.d(TAG, "onCreate : isConnected: " + isConnected);
+        //Log.d(TAG, "onCreate : isConnected: " + isConnected);
         if (!isConnected) {
             showConnectionStatus(false);
         }
@@ -142,7 +142,7 @@ public class MoviesFragment extends Fragment {
             @Override
             public void connectionChanged(Boolean isConnected) {
                 //Toast.makeText(getApplicationContext(),"isConnected "+isConnected,Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "connectionChanged: isConnected: " + isConnected);
+               // Log.d(TAG, "connectionChanged: isConnected: " + isConnected);
                 showConnectionStatus(isConnected);
                 if (isConnected && presentPage==1) {
                     loadMovies();
@@ -190,7 +190,8 @@ public class MoviesFragment extends Fragment {
         // Log.d(TAG,"sort by "+SortHelper.getSortByPreference(this).toString());
 
         moviesResponseCall = apiInterface.discoverMovies(Constants.MOVIE_DB_API_KEY,
-                SortHelper.getSortByPreference(getContext()).toString(),presentPage);
+                PreferenceUtil.getSortByPreference(getContext()).toString(),
+                presentPage,PreferenceUtil.getPreferredLanguage(getContext()));
 
         moviesResponseCall.enqueue(new Callback<MoviesResponse>() {
             @Override
@@ -233,7 +234,7 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG,"onPause");
+        //Log.d(TAG,"onPause");
         if (this.connectionReceiver!=null){
             getActivity().unregisterReceiver(connectionReceiver);
         }
@@ -243,7 +244,7 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume");
+        //Log.d(TAG,"onResume");
         getActivity().registerReceiver(connectionReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         IntentFilter intentFilter = new IntentFilter();

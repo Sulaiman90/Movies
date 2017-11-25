@@ -255,7 +255,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         mMovies = new ArrayList<>();
 
-        final MoviesAdapter moviesAdapter = new MoviesAdapter(this,R.layout.item_movie, mMovies);
+        final MoviesAdapter moviesAdapter = new MoviesAdapter(this,R.layout.item_movie, mMovies, MoviesAdapter.SIMILAR_MOVIES);
 
         RecyclerView mSimiliarMovies = findViewById(R.id.rv_similar_movies);
         final TextView mSimiliarMoviesTv = findViewById(R.id.tvSimiliarMovies);
