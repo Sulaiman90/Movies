@@ -144,14 +144,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setFragment(new PreferencesFragment());
         }
         else if (id == R.id.nav_share) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            String shareMsg = "Movies App "+ "\n";
+            shareMsg +=  "https://play.google.com/store/apps/details?id=com.innovae.todolist&hl=en";
+            shareIntent.putExtra(Intent.EXTRA_TEXT,shareMsg);
+            startActivity(shareIntent);
+        }
+        else if (id == R.id.nav_rate) {
 
         }
-        else if (id == R.id.nav_send) {
-
-        }
-
         previousSelectedMenuId = id;
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

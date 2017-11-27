@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import com.innovae.movies.adapters.MoviesAdapter;
 import com.innovae.movies.adapters.TrailersAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.model.Movie;
+import com.innovae.movies.model.MovieBrief;
 import com.innovae.movies.model.MovieCast;
 import com.innovae.movies.model.MovieCreditsResponse;
 import com.innovae.movies.model.MovieGenre;
@@ -63,6 +66,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private Call<MovieVideoResponse> movieVideoResponseCall;
     private Call<MovieCreditsResponse> movieCreditsResponseCall;
     private Call<SimiliarMoviesResponse> movieSimiliarResponseCall;
+    private Call<MovieBrief> movieBriefCall;
 
     private List<Movie> mMovies;
 
@@ -153,13 +157,89 @@ public class MovieDetailActivity extends AppCompatActivity {
         mReleaseDate.setText(releaseString);
 
         TextView mRating = findViewById(R.id.movie_rating);
-        mRating.setText(movie.getRating().toString() + "/10");
+        mRating.setText(String.format("%.1f",movie.getRating()) + "/10");
 
         TextView mOverview = findViewById(R.id.overview);
         mOverview.setText(movie.getPlotSynopsis());
 
         TextView mGenre = findViewById(R.id.movie_genre);
         mGenre.setText(TextUtils.join(", ", movie.getMovieGenres()));
+
+        setFavouriteButton();
+
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        movieBriefCall = apiInterface.getMovieDetails(movie.getId(),Constants.MOVIE_DB_API_KEY);
+
+        movieBriefCall.enqueue(new Callback<MovieBrief>() {
+            @Override
+            public void onResponse(Call<MovieBrief> call, Response<MovieBrief> response) {
+                if(!response.isSuccessful()){
+                    movieBriefCall = call.clone();
+                    movieBriefCall.enqueue(this);
+                }
+
+                if (response.body() == null) return;
+
+                setShareButton(response.body().getTitle(),response.body().getTagline(),response.body().getImdbId());
+            }
+
+            @Override
+            public void onFailure(Call<MovieBrief> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void setShareButton(String title,String tagLine,String imdbId){
+        String extraText = "";
+        if(title != null){
+            extraText += title + "\n";
+        }
+        if(tagLine != null){
+            extraText += tagLine + "\n";
+        }
+        if(imdbId != null){
+            extraText +=  Constants.IMDB_BASE_URL + imdbId + "\n";
+        }
+
+        extraText += "Via - Movies App";
+
+        ImageButton mShareImageButton = findViewById(R.id.shareButton);
+
+        final Intent shareDetailsIntent = new Intent(Intent.ACTION_SEND);
+        shareDetailsIntent.setType("text/plain");
+        shareDetailsIntent.putExtra(Intent.EXTRA_TEXT, extraText);
+
+        mShareImageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    startActivity(shareDetailsIntent);
+            }
+        });
+    }
+
+    private void setFavouriteButton(){
+
+        final ImageButton mFavoriteImageButton = findViewById(R.id.favouriteButton);
+        if(true){
+            mFavoriteImageButton.setTag(Constants.TAG_NOT_FAV);
+        }
+        else{
+            mFavoriteImageButton.setTag(Constants.TAG_FAV);
+        }
+        mFavoriteImageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if((int) mFavoriteImageButton.getTag()==Constants.TAG_NOT_FAV){
+                    mFavoriteImageButton.setTag(Constants.TAG_FAV);
+                    mFavoriteImageButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                }
+                else{
+                    mFavoriteImageButton.setTag(Constants.TAG_NOT_FAV);
+                    mFavoriteImageButton.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                }
+            }
+        });
     }
 
     private void setTrailers(){
@@ -251,7 +331,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void setSimiliarMovies(){
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        movieSimiliarResponseCall = apiInterface.getSimiliarMovies(movie.getId(),Constants.MOVIE_DB_API_KEY);
+        movieSimiliarResponseCall = apiInterface.getSimilarMovies(movie.getId(),Constants.MOVIE_DB_API_KEY);
 
         mMovies = new ArrayList<>();
 
@@ -291,5 +371,4 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
     }
-
 }

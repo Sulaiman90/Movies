@@ -1,5 +1,6 @@
 package com.innovae.movies.rest;
 
+import com.innovae.movies.model.MovieBrief;
 import com.innovae.movies.model.MovieCreditsResponse;
 import com.innovae.movies.model.MovieVideoResponse;
 import com.innovae.movies.model.MoviesResponse;
@@ -17,7 +18,7 @@ public interface ApiInterface {
                                         @Query("page") int page,@Query("with_original_language") String originalLanguage);
 
     @GET("movie/{movie_id}/similar")
-    Call<SimiliarMoviesResponse> getSimiliarMovies(@Path("movie_id") Integer id, @Query("api_key") String apiKey);
+    Call<SimiliarMoviesResponse> getSimilarMovies(@Path("movie_id") Integer id, @Query("api_key") String apiKey);
 
     @GET("movie/{movie_id}/videos")
     Call<MovieVideoResponse> getMovieVideos(@Path("movie_id") Integer id,@Query("api_key") String apiKey);
@@ -25,7 +26,7 @@ public interface ApiInterface {
     @GET("movie/{movie_id}/credits")
     Call<MovieCreditsResponse> getMovieCredits(@Path("movie_id") Integer id, @Query("api_key") String apiKey);
 
-    /*@GET("movie/{id}")
-    Call<MoviesResponse> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);*/
+    @GET("movie/{id}")
+    Call<MovieBrief> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
 }
 
