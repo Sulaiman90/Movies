@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            /*if (doubleBackToExit){
+           if (doubleBackToExit){
                 super.onBackPressed();
             }
             doubleBackToExit = true;
@@ -103,16 +103,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void run() {
                     doubleBackToExit = false;
                 }
-            },2000);*/
+            },2000);
             super.onBackPressed();
         }
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.sort,menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

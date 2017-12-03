@@ -66,6 +66,12 @@ public class FavouriteMoviesFragment extends Fragment {
         mMoviesAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
+    }
+
     private void loadFavouriteMovies(){
        List<MovieBrief> favouriteMovies = Favourite.getFavouriteMovies(getContext());
        if(favouriteMovies.isEmpty()){
