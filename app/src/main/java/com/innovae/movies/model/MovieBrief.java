@@ -2,6 +2,7 @@ package com.innovae.movies.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieBrief {
@@ -48,8 +49,14 @@ public class MovieBrief {
     private Double voteAverage;
     @SerializedName("vote_count")
     private Integer voteCount;
+    @SerializedName("genre_ids")
+    private int[] genreIds = new int[0];
 
-    public MovieBrief(Boolean adult, String backdropPath, Integer budget,String homepage, Integer id, String imdbId, String originalLanguage, String originalTitle, String overview, Double popularity, String posterPath, String releaseDate, Integer revenue, Integer runtime, String status, String tagline, String title, Boolean video, Double voteAverage, Integer voteCount) {
+    public MovieBrief(Boolean adult, String backdropPath, Integer budget,String homepage, Integer id,
+                      String imdbId, String originalLanguage, String originalTitle, String overview,
+                      Double popularity, String posterPath, String releaseDate, Integer revenue,
+                      Integer runtime, String status, String tagline, String title, Boolean video,
+                      Double voteAverage, Integer voteCount, int[] genreIds) {
         this.adult = adult;
         this.backdropPath = backdropPath;
         this.budget = budget;
@@ -70,7 +77,22 @@ public class MovieBrief {
         this.video = video;
         this.voteAverage = voteAverage;
         this.voteCount = voteCount;
+        this.genreIds = genreIds;
     }
+
+    public MovieBrief(){
+
+    }
+
+    public int[] getGenreIds() {
+        return genreIds;
+    }
+
+    public void setGenreIds(int[] genreIds) {
+        this.genreIds = genreIds;
+    }
+
+
 
     public Boolean getAdult() {
         return adult;
@@ -230,5 +252,17 @@ public class MovieBrief {
 
     public void setVoteCount(Integer voteCount) {
         this.voteCount = voteCount;
+    }
+
+    public List<String> getMovieGenres() {
+        List<String> genres = new ArrayList<>();
+        int[] ids = getGenreIds();
+        for (int i=0; i<ids.length; i++) {
+            MovieGenre genre = MovieGenre.getById(ids[i]);
+            if (genre != null) {
+                genres.add(genre.getTitle());
+            }
+        }
+        return genres;
     }
 }

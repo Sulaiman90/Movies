@@ -18,6 +18,7 @@ import com.innovae.movies.activities.MovieDetailActivity;
 import com.innovae.movies.adapters.MoviesAdapter.MovieViewHolder;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.model.Movie;
+import com.innovae.movies.model.MovieBrief;
 import com.innovae.movies.util.Constants;
 import com.innovae.movies.util.Utility;
 import com.squareup.picasso.Picasso;
@@ -27,7 +28,7 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
 
-    private List<Movie> mMovies;
+    private List<MovieBrief> mMovies;
     private int rowLayout;
     private Context context;
     public final static int All_MOVIES = 1;
@@ -36,13 +37,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
 
     private static final String TAG = MoviesAdapter.class.getSimpleName();
 
-    public MoviesAdapter(Context context, int rowLayout,List<Movie> movies){
+    public MoviesAdapter(Context context, int rowLayout,List<MovieBrief> movies){
         this.rowLayout = rowLayout;
         this.context = context;
         this.mMovies = movies;
     }
 
-    public MoviesAdapter(Context context, int rowLayout,List<Movie> movies,int type){
+    public MoviesAdapter(Context context, int rowLayout,List<MovieBrief> movies,int type){
         this.rowLayout = rowLayout;
         this.context = context;
         this.mMovies = movies;
@@ -77,7 +78,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
             moviePoster = itemView.findViewById(R.id.show_card_poster);
             movieTitle = itemView.findViewById(R.id.show_card_title);
 
-            double moviePosterWidth =  context.getResources().getDisplayMetrics().widthPixels * 0.31;
+            double moviePosterWidth =  context.getResources().getDisplayMetrics().widthPixels * 0.32;
 
             if(mType == SIMILAR_MOVIES){
                 moviePoster.getLayoutParams().width =  (int) moviePosterWidth;
@@ -95,12 +96,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
             if(!isConnected){
                 return;
             }
-            Movie movie =  mMovies.get(getAdapterPosition());
            // Log.d(TAG,"position "+getAdapterPosition() + " title "+movie.getTitle());
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(Constants.MOVIE_DATA, movie);
+            Log.d(TAG,"MovieId "+mMovies.get(getAdapterPosition()).getId());
             Intent detailIntent = new Intent(context, MovieDetailActivity.class);
-            detailIntent.putExtras(bundle);
+            detailIntent.putExtra(Constants.MOVIE_ID, mMovies.get(getAdapterPosition()).getId());
+            detailIntent.putExtra(Constants.MOVIE_TITLE, mMovies.get(getAdapterPosition()).getTitle());
             context.startActivity(detailIntent);
         }
     }

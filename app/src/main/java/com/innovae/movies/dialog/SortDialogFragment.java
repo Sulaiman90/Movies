@@ -42,7 +42,6 @@ public class SortDialogFragment extends DialogFragment {
                 });
 
         return sortDialog.create();
-
     }
 
     private void sendSortPreferenceChangedBroadcast() {

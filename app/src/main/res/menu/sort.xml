@@ -3,10 +3,27 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:icon="@drawable/ic_sort_white_24dp"
+        android:icon="@drawable/ic_filter_list_white_24dp"
         android:id="@+id/action_sort"
         android:title="@string/action_sort"
+        app:showAsAction="never"
+        android:orderInCategory="101"
+        />
+
+    <item
+        android:icon="@drawable/ic_search_white_24dp"
+        android:id="@+id/action_search"
+        android:title="@string/action_search"
         app:showAsAction="ifRoom"
+        android:orderInCategory="100"
+        />
+
+    <item
+        android:icon="@drawable/ic_language_white_24dp"
+        android:id="@+id/action_language"
+        android:title="@string/action_language"
+        app:showAsAction="never"
+        android:orderInCategory="101"
         />
 
 </menu>

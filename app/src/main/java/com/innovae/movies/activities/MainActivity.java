@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -38,6 +39,7 @@ import com.innovae.movies.R;
 import com.innovae.movies.adapters.MoviesAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.dialog.SortDialogFragment;
+import com.innovae.movies.fragments.FavouriteMoviesFragment;
 import com.innovae.movies.fragments.MoviesFragment;
 import com.innovae.movies.fragments.PreferencesFragment;
 import com.innovae.movies.model.Movie;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private int previousSelectedMenuId = R.id.nav_movies;
+    private boolean doubleBackToExit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +88,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            /*if (doubleBackToExit){
+                super.onBackPressed();
+            }
+            doubleBackToExit = true;
+            Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExit = false;
+                }
+            },2000);*/
             super.onBackPressed();
         }
     }
@@ -138,16 +153,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setFragment(new MoviesFragment());
         }
         else if (id == R.id.nav_favourites) {
-
-        } else if (id == R.id.nav_settings) {
+            setTitle(R.string.favourites);
+            setFragment(new FavouriteMoviesFragment());
+        }
+        else if (id == R.id.nav_settings) {
             setTitle(R.string.settings);
             setFragment(new PreferencesFragment());
         }
         else if (id == R.id.nav_share) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            String shareMsg = "Movies App "+ "\n";
+            String shareMsg = "";
             shareMsg +=  "https://play.google.com/store/apps/details?id=com.innovae.todolist&hl=en";
+            shareMsg +=  "\n" +" Share with your friends "+ "\n";
             shareIntent.putExtra(Intent.EXTRA_TEXT,shareMsg);
             startActivity(shareIntent);
         }

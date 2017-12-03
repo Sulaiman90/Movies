@@ -46,7 +46,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailerViewHolder>{
             holder.trailerTitle.setText("");
         }
         String thumbNailPath = Utility.buildTrailerThumbNailPath(mTrailers.get(position).getKey());
-        Picasso.with(mContext).load(thumbNailPath).into(holder.trailerVideo);
+        Picasso.with(mContext).load(thumbNailPath).placeholder(R.drawable.placeholder_loading).into(holder.trailerVideo);
     }
 
     @Override

@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 public enum Sort {
 
-
     MOST_POPULAR("popularity.desc"),
     MOST_RATED("vote_count.desc"),
     UPCOMING("release_date.desc");

@@ -40,6 +40,7 @@ public class Movie implements Parcelable{
         this.genreIds = genreIds;
     }
 
+
     private Movie(Parcel in) {
         this.id = in.readInt();
         this.title = in.readString();

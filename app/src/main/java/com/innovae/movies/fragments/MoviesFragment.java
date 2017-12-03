@@ -30,6 +30,7 @@ import com.innovae.movies.adapters.MoviesAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.dialog.SortDialogFragment;
 import com.innovae.movies.model.Movie;
+import com.innovae.movies.model.MovieBrief;
 import com.innovae.movies.model.MoviesResponse;
 import com.innovae.movies.rest.ApiClient;
 import com.innovae.movies.rest.ApiInterface;
@@ -57,7 +58,7 @@ public class MoviesFragment extends Fragment {
 
     private Snackbar snackbar;
     private MoviesAdapter mMoviesAdapter;
-    private List<Movie> mMovies;
+    private List<MovieBrief> mMovies;
 
     private GridLayoutManager mLayoutManager;
 
@@ -203,7 +204,7 @@ public class MoviesFragment extends Fragment {
                 if(response.body() == null) return;
                 if(response.body().getResults() == null) return;
 
-                for(Movie movie:response.body().getResults()){
+                for(MovieBrief movie:response.body().getResults()){
                     if(movie != null && movie.getTitle() != null && movie.getPosterPath() != null){
                         mMovies.add(movie);
                     }
