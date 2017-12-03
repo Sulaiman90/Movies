@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.setCheckedItem(R.id.nav_movies);
@@ -170,7 +171,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(shareIntent);
         }
         else if (id == R.id.nav_rate) {
-
+            Uri webpage = Uri.parse(Constants.APP_PLAYSTORE_URL);
+            Intent rateIntent = new Intent(Intent.ACTION_VIEW,webpage);
+            if(rateIntent.resolveActivity(getPackageManager()) != null){
+                startActivity(rateIntent);
+            }
         }
         previousSelectedMenuId = id;
         drawer.closeDrawer(GravityCompat.START);
