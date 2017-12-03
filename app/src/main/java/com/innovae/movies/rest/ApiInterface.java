@@ -1,5 +1,6 @@
 package com.innovae.movies.rest;
 
+import com.innovae.movies.model.Movie;
 import com.innovae.movies.model.MovieBrief;
 import com.innovae.movies.model.MovieCreditsResponse;
 import com.innovae.movies.model.MovieVideoResponse;
@@ -27,6 +28,6 @@ public interface ApiInterface {
     Call<MovieCreditsResponse> getMovieCredits(@Path("movie_id") Integer id, @Query("api_key") String apiKey);
 
     @GET("movie/{id}")
-    Call<MovieBrief> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
+    Call<Movie> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
 }
 

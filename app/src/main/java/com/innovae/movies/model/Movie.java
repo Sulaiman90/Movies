@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Movie implements Parcelable{
+public class Movie {
 
     @SerializedName("id")
     private Integer id;
@@ -18,83 +18,69 @@ public class Movie implements Parcelable{
     @SerializedName("poster_path")
     private String posterPath;
     @SerializedName("overview")
-    private String plotSynopsis;
+    private String overview;
     @SerializedName("vote_average")
-    private Double rating;
+    private Double voteAverage;
     @SerializedName("release_date")
     private String releaseDate;
     @SerializedName("backdrop_path")
     private String backdropPath;
-    @SerializedName("genre_ids")
-    private int[] genreIds = new int[0];
+    @SerializedName("genres")
+    private List<Genre> genres;
+    @SerializedName("tagline")
+    private String tagline;
+    @SerializedName("imdb_id")
+    private String imdbId;
 
-    public Movie(Integer id,String title, String posterPath, String plotSynopsis, Double rating,
-                 String releaseDate, String backdropPath, int[] genreIds) {
+    public Movie(Integer id,String title, String posterPath, String overview, Double voteAverage,
+                 String releaseDate, String backdropPath, List<Genre> genres, String tagline, String imdbId) {
         this.id = id;
         this.title = title;
         this.posterPath = posterPath;
-        this.plotSynopsis = plotSynopsis;
-        this.rating = rating;
+        this.overview = overview;
+        this.voteAverage = voteAverage;
         this.releaseDate = releaseDate;
         this.backdropPath = backdropPath;
-        this.genreIds = genreIds;
+        this.genres = genres;
+        this.imdbId = imdbId;
+        this.tagline = tagline;
     }
 
-
-    private Movie(Parcel in) {
-        this.id = in.readInt();
-        this.title = in.readString();
-        this.posterPath = in.readString();
-        this.backdropPath = in.readString();
-        this.plotSynopsis = in.readString();
-        this.rating =  in.readDouble();
-        this.releaseDate = in.readString();
-        this.genreIds = in.createIntArray();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(title);
-        dest.writeString(posterPath);
-        dest.writeString(backdropPath);
-        dest.writeString(plotSynopsis);
-        dest.writeDouble(rating);
-        dest.writeString(releaseDate);
-        dest.writeIntArray(genreIds);
-    }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 
     @Override
     public String toString() {
         return "Movie{" +
                 "title='" + title + '\'' +
                 ", posterPath='" + posterPath + '\'' +
-                ", plotSynopsis='" + plotSynopsis + '\'' +
-                ", rating=" + rating +
+                ", overview='" + overview + '\'' +
+                ", voteAverage=" + voteAverage +
                 ", releaseDate='" + releaseDate + '\'' +
                 '}';
     }
 
-    public int[] getGenreIds() {
-        return genreIds;
+    public List<Genre> getGenres() {
+        return genres;
     }
 
-    public void setGenreIds(int[] genreIds) {
-        this.genreIds = genreIds;
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
     }
 
+    public String getImdbId() {
+        return imdbId;
+    }
+
+    public void setImdbId(String imdbId) {
+        this.imdbId = imdbId;
+    }
+
+    public String getTagline() {
+        return tagline;
+    }
+
+    public void setTagline(String tagline) {
+        this.tagline = tagline;
+    }
 
     public Integer getId() {
         return id;
@@ -128,20 +114,20 @@ public class Movie implements Parcelable{
         this.posterPath = posterPath;
     }
 
-    public String getPlotSynopsis() {
-        return plotSynopsis;
+    public String getOverview() {
+        return overview;
     }
 
-    public void setPlotSynopsis(String plotSynopsis) {
-        this.plotSynopsis = plotSynopsis;
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
-    public Double getRating() {
-        return rating;
+    public Double getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setVoteAverage(Double rating) {
+        this.voteAverage = voteAverage;
     }
 
     public String getReleaseDate() {
@@ -152,21 +138,5 @@ public class Movie implements Parcelable{
         this.releaseDate = releaseDate;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public List<String> getMovieGenres() {
-        List<String> genres = new ArrayList<>();
-        int[] ids = getGenreIds();
-        for (int i=0; i<ids.length; i++) {
-            MovieGenre genre = MovieGenre.getById(ids[i]);
-            if (genre != null) {
-                genres.add(genre.getTitle());
-            }
-        }
-        return genres;
-    }
 
 }

@@ -23,11 +23,11 @@ import com.innovae.movies.adapters.MovieCastsAdapter;
 import com.innovae.movies.adapters.MoviesAdapter;
 import com.innovae.movies.adapters.TrailersAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
+import com.innovae.movies.model.Genre;
 import com.innovae.movies.model.Movie;
 import com.innovae.movies.model.MovieBrief;
 import com.innovae.movies.model.MovieCast;
 import com.innovae.movies.model.MovieCreditsResponse;
-import com.innovae.movies.model.MovieGenre;
 import com.innovae.movies.model.MovieVideoResponse;
 import com.innovae.movies.model.SimiliarMoviesResponse;
 import com.innovae.movies.model.Video;
@@ -55,6 +55,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView titleView;
     private ImageView mPosterImageView;
     private ImageView mBackdropImageView;
+    private TextView mReleaseDate;
+    private TextView mRating;
+    private TextView mOverview;
+    private TextView mGenre;
+    private ImageView mRatingStar;
 
     private List<Video> mTrailers;
 
@@ -62,7 +67,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private Call<MovieVideoResponse> movieVideoResponseCall;
     private Call<MovieCreditsResponse> movieCreditsResponseCall;
     private Call<SimiliarMoviesResponse> movieSimiliarResponseCall;
-    private Call<MovieBrief> movieBriefCall;
+    private Call<Movie> movieBriefCall;
 
     private List<MovieBrief> mMovies;
     private int mMovieId;
@@ -73,6 +78,22 @@ public class MovieDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+
+        mReleaseDate = findViewById(R.id.movie_release_date);
+        mRating = findViewById(R.id.movie_rating);
+        mOverview = findViewById(R.id.overview);
+        titleView = findViewById(R.id.movie_title);
+        mMovieTabLayout = findViewById(R.id.layout_movie);
+        mPosterImageView = findViewById(R.id.iv_poster);
+        mBackdropImageView =  findViewById(R.id.iv_backdrop);
+        mGenre = findViewById(R.id.movie_genre);
+        mRatingStar = findViewById(R.id.iv_rating);
+
+        mReleaseDate.setVisibility(View.INVISIBLE);
+        mRating.setVisibility(View.INVISIBLE);
+        mOverview.setVisibility(View.INVISIBLE);
+        mGenre.setVisibility(View.INVISIBLE);
+        mRatingStar.setVisibility(View.INVISIBLE);
 
         mTrailers = new ArrayList<>();
 
@@ -110,12 +131,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
-        titleView = findViewById(R.id.movie_title);
         titleView.setText(movie_title);
-
-        mMovieTabLayout = findViewById(R.id.layout_movie);
-        mPosterImageView = findViewById(R.id.iv_poster);
-        mBackdropImageView =  findViewById(R.id.iv_backdrop);
 
         boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
 
@@ -134,9 +150,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         movieBriefCall = apiInterface.getMovieDetails(mMovieId,Constants.MOVIE_DB_API_KEY);
 
-        movieBriefCall.enqueue(new Callback<MovieBrief>() {
+        movieBriefCall.enqueue(new Callback<Movie>() {
             @Override
-            public void onResponse(Call<MovieBrief> call, Response<MovieBrief> response) {
+            public void onResponse(Call<Movie> call, Response<Movie> response) {
                 if(!response.isSuccessful()){
                     movieBriefCall = call.clone();
                     movieBriefCall.enqueue(this);
@@ -159,8 +175,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                 String fullPosterPath  = Utility.buildCompletePosterPath(posterPath);
                 Picasso.with(getApplicationContext()).load(fullPosterPath).placeholder(R.drawable.placeholder_loading).into(mPosterImageView);
 
-                TextView mReleaseDate = findViewById(R.id.movie_release_date);
-
                 String releaseString = response.body().getReleaseDate();
 
                 SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -176,20 +190,41 @@ public class MovieDetailActivity extends AppCompatActivity {
                     }
                 }
 
-                mReleaseDate.setText(releaseString);
+                if(releaseString != null && !releaseString.trim().isEmpty()){
+                    mReleaseDate.setText(releaseString);
+                    mReleaseDate.setVisibility(View.VISIBLE);
+                }
 
-                TextView mRating = findViewById(R.id.movie_rating);
-                mRating.setText(String.format("%.1f",response.body().getVoteAverage()) + "/10");
+                if(response.body().getVoteAverage() != null && response.body().getVoteAverage()!= 0){
+                    mRating.setText(String.format("%.1f",response.body().getVoteAverage()) + "/10");
+                    mRating.setVisibility(View.VISIBLE);
+                    mRatingStar.setVisibility(View.VISIBLE);
+                }
 
-                TextView mOverview = findViewById(R.id.overview);
-                mOverview.setText(response.body().getOverview());
+                if(response.body().getOverview() != null && !response.body().getOverview().trim().isEmpty()) {
+                    mOverview.setText(response.body().getOverview());
+                    mOverview.setVisibility(View.VISIBLE);
+                }
 
-                TextView mGenre = findViewById(R.id.movie_genre);
-                mGenre.setText(TextUtils.join(", ", response.body().getMovieGenres()));
+                List<String> genres = new ArrayList<>();
+                List<Genre> genresList = response.body().getGenres();
+                for(int i= 0;i< genresList.size(); i++){
+                    if (genresList.get(i) == null) continue;
+                    String genreName = genresList.get(i).getGenreName();
+                    if(genreName != null){
+                        genres.add(genreName);
+                    }
+                }
+
+                if(genres != null){
+                    mGenre.setText(TextUtils.join(", ", genres));
+                    mGenre.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override
-            public void onFailure(Call<MovieBrief> call, Throwable t) {
+            public void onFailure(Call<Movie> call, Throwable t) {
 
             }
         });

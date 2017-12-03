@@ -254,15 +254,4 @@ public class MovieBrief {
         this.voteCount = voteCount;
     }
 
-    public List<String> getMovieGenres() {
-        List<String> genres = new ArrayList<>();
-        int[] ids = getGenreIds();
-        for (int i=0; i<ids.length; i++) {
-            MovieGenre genre = MovieGenre.getById(ids[i]);
-            if (genre != null) {
-                genres.add(genre.getTitle());
-            }
-        }
-        return genres;
-    }
 }

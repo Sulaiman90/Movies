@@ -212,7 +212,7 @@ public class MoviesFragment extends Fragment {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
-                Log.d(TAG, "presentPage "+presentPage  +" old size "+ mMovies.size());
+                //Log.d(TAG, "presentPage "+presentPage  +" old size "+ mMovies.size());
                 mProgressBar.setVisibility(View.INVISIBLE);
 
                 if(response.body() == null) return;
