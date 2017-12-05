@@ -25,7 +25,6 @@ public class SortDialogFragment extends DialogFragment {
         return new SortDialogFragment();
     }
 
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

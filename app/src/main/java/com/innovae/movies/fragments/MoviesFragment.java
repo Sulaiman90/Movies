@@ -30,6 +30,7 @@ import com.innovae.movies.R;
 import com.innovae.movies.activities.MainActivity;
 import com.innovae.movies.adapters.MoviesAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
+import com.innovae.movies.dialog.LanguageDialog;
 import com.innovae.movies.dialog.SortDialogFragment;
 import com.innovae.movies.model.Movie;
 import com.innovae.movies.model.MovieBrief;
@@ -157,8 +158,8 @@ public class MoviesFragment extends Fragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                if(action.equals(SortDialogFragment.BROADCAST_SORT_PREFERENCE_CHANGED)){
-                    // mRecyclerView.smoothScrollToPosition(0);
+                if(action.equals(SortDialogFragment.BROADCAST_SORT_PREFERENCE_CHANGED) ||
+                        action.equals(LanguageDialog.BROADCAST_LANGUAGE_PREFERENCE_CHANGED)){
                     if(ConnectivityReceiver.isConnected(getContext())){
                         mMovies.clear();
                         previousTotal = 0;
@@ -202,11 +203,12 @@ public class MoviesFragment extends Fragment {
 
         mProgressBar.setVisibility(View.VISIBLE);
 
-        // Log.d(TAG,"sort by "+SortHelper.getSortByPreference(this).toString());
+        Log.d(TAG,"getMovieLanguagePreference "+PreferenceUtil.getMovieLanguagePreference(getContext()).toString());
 
         moviesResponseCall = apiInterface.discoverMovies(Constants.MOVIE_DB_API_KEY,
                 PreferenceUtil.getSortByPreference(getContext()).toString(),
-                presentPage,PreferenceUtil.getPreferredLanguage(getContext()));
+                presentPage,
+                PreferenceUtil.getMovieLanguagePreference(getContext()).toString());
 
         moviesResponseCall.enqueue(new Callback<MoviesResponse>() {
             @Override
@@ -264,6 +266,7 @@ public class MoviesFragment extends Fragment {
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SortDialogFragment.BROADCAST_SORT_PREFERENCE_CHANGED);
+        intentFilter.addAction(LanguageDialog.BROADCAST_LANGUAGE_PREFERENCE_CHANGED);
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(sortPreferenceReciever,intentFilter);
     }
 

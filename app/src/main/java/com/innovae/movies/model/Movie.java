@@ -138,5 +138,4 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-
 }

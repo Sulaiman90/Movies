@@ -6,7 +6,7 @@
         >
         <ListPreference
             android:title="@string/dialog_lang_title_preference"
-            android:key="@string/lang_key"
+            android:key="@string/pref_lang_key"
             android:entries="@array/entries_lang_preference"
             android:entryValues="@array/entry_values_lang_preference"
             android:defaultValue="@string/pref_lang_default_value"

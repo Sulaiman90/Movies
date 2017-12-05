@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.innovae.movies.R;
+import com.innovae.movies.dialog.LanguageDialog;
 import com.innovae.movies.dialog.SortDialogFragment;
 import com.innovae.movies.fragments.FavouriteMoviesFragment;
 import com.innovae.movies.fragments.MoviesFragment;
@@ -89,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.action_sort:
                 showSortByDialog();
                 return true;
+            case R.id.action_language:
+                showLanguageSelectionDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -104,6 +108,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void showSortByDialog() {
         DialogFragment sortingDialogFragment = new SortDialogFragment();
         sortingDialogFragment.show(getFragmentManager(), SortDialogFragment.TAG);
+    }
+
+    private void showLanguageSelectionDialog(){
+        LanguageDialog dialogFragment = new LanguageDialog();
+        dialogFragment.show(getSupportFragmentManager(),LanguageDialog.TAG);
     }
 
     @Override

@@ -259,9 +259,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void setFavouriteButton(final String title,final String posterPath){
-
         final ImageButton mFavoriteImageButton = findViewById(R.id.favouriteButton);
-        Log.d(TAG,"Favourite "+Favourite.isMovieFavourite(this, mMovieId));
+        mFavoriteImageButton.setVisibility(View.VISIBLE);
+        //Log.d(TAG,"Favourite "+Favourite.isMovieFavourite(this, mMovieId));
         if(Favourite.isMovieFavourite(this, mMovieId)){
             mFavoriteImageButton.setTag(Constants.TAG_FAV);
             mFavoriteImageButton.setImageResource(R.drawable.ic_favorite_white_24dp);
