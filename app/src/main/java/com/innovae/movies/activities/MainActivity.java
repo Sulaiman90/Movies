@@ -2,6 +2,7 @@ package com.innovae.movies.activities;
 
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = MainActivity.class.getSimpleName();
     private int previousSelectedMenuId = R.id.nav_movies;
     private boolean doubleBackToExit = false;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +50,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.setCheckedItem(R.id.nav_movies);
 
         setTitle(R.string.movies);
         setFragment(new MoviesFragment());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationView.setCheckedItem(R.id.nav_movies);
     }
 
     @Override
@@ -142,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             String shareMsg = "";
-            shareMsg +=  "https://play.google.com/store/apps/details?id=com.innovae.todolist&hl=en";
+            shareMsg +=  Constants.APP_PLAYSTORE_URL;
             shareMsg +=  "\n" +" Share with your friends "+ "\n";
             shareIntent.putExtra(Intent.EXTRA_TEXT,shareMsg);
             startActivity(shareIntent);

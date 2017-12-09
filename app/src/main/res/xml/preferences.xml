@@ -2,16 +2,26 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
    <PreferenceCategory
-        android:title="@string/lang_title_preference"
+        android:title="@string/night_mode_preference"
         >
-        <ListPreference
-            android:title="@string/dialog_lang_title_preference"
-            android:key="@string/pref_lang_key"
-            android:entries="@array/entries_lang_preference"
-            android:entryValues="@array/entry_values_lang_preference"
-            android:defaultValue="@string/pref_lang_default_value"
-            android:dialogTitle="@string/dialog_lang_title_preference"
-            android:summary="%s"/>
+
+       <SwitchPreferenceCompat
+           android:id="@+id/pref_night_mode_auto"
+           android:key="@string/pref_auto_night_mode_key"
+           android:title="@string/pref_auto_night_mode_title"
+           android:summary="@string/pref_auto_night_mode_summary"
+           android:defaultValue="@string/pref_auto_night_mode_default"
+           />
+
+       <SwitchPreferenceCompat
+           android:id="@+id/pref_night_mode"
+           android:key="@string/pref_night_mode_key"
+           android:title="@string/pref_night_mode_title"
+           android:summaryOn="@string/pref_night_mode_summary_on"
+           android:summaryOff="@string/pref_night_mode_summary_off"
+           android:defaultValue="@string/pref_night_mode_default"
+           />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

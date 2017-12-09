@@ -55,7 +55,7 @@ public class FavouriteMoviesFragment extends Fragment {
         mMoviesAdapter = new MoviesAdapter(getContext(), R.layout.item_movie, mFavouriteMovies);
         mRecyclerView.setAdapter(mMoviesAdapter);
 
-        loadFavouriteMovies();
+        //loadFavouriteMovies();
 
         return view;
     }
@@ -63,7 +63,15 @@ public class FavouriteMoviesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        //mMoviesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mFavouriteMovies.clear();
         mMoviesAdapter.notifyDataSetChanged();
+        loadFavouriteMovies();
     }
 
     @Override
@@ -79,7 +87,7 @@ public class FavouriteMoviesFragment extends Fragment {
            return;
        }
        for(MovieBrief favourites:favouriteMovies){
-           Log.d(TAG,"loadFavouriteMovies:  "+favourites.getId());
+           //Log.d(TAG,"loadFavouriteMovies:  "+favourites.getId());
            mFavouriteMovies.add(favourites);
        }
         mMoviesAdapter.notifyDataSetChanged();

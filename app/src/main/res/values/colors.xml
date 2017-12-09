@@ -3,4 +3,9 @@
     <color name="colorPrimary">#ffe53935</color>
     <color name="colorPrimaryDark">#ffc62828</color>
     <color name="colorAccent">#ffe57373</color>
+
+    <color name="drawerItemColor">#000000</color>
+    <color name="drawerIconColor">#ffffff</color>
+
+    <color name="bgColor">#ffffff</color>
 </resources>

@@ -66,4 +66,16 @@
     <string name="pref_lang_malayalam_value">mal</string>
     <string name="pref_lang_telugu_value">te</string>
 
+    <string name="night_mode_preference">Night Mode</string>
+    <string name="pref_auto_night_mode_title">Automatic Night Mode</string>
+    <string name="pref_auto_night_mode_default">false</string>
+    <string name="pref_auto_night_mode_key">auto Night Mode</string>
+    <string name="pref_auto_night_mode_summary">Automatically toggles Night Mode depending on the time.</string>
+
+    <string name="pref_night_mode_title">Enable Night Mode</string>
+    <string name="pref_night_mode_default">false</string>
+    <string name="pref_night_mode_key">auto Night Mode</string>
+    <string name="pref_night_mode_summary_on">Switch off to enable Night Mode</string>
+    <string name="pref_night_mode_summary_off">Switch on to enable Night Mode</string>
+
 </resources>
