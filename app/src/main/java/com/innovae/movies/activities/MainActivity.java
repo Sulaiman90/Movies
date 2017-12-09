@@ -2,7 +2,6 @@ package com.innovae.movies.activities;
 
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -11,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +22,6 @@ import com.innovae.movies.dialog.LanguageDialog;
 import com.innovae.movies.dialog.SortDialogFragment;
 import com.innovae.movies.fragments.FavouriteMoviesFragment;
 import com.innovae.movies.fragments.MoviesFragment;
-import com.innovae.movies.fragments.PreferencesFragment;
 import com.innovae.movies.util.Constants;
 
 
@@ -143,10 +140,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setTitle(R.string.favourites);
             setFragment(new FavouriteMoviesFragment());
         }
-        else if (id == R.id.nav_settings) {
+       /* else if (id == R.id.nav_settings) {
             setTitle(R.string.settings);
             setFragment(new PreferencesFragment());
-        }
+        }*/
         else if (id == R.id.nav_share) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");

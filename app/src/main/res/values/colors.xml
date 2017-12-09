@@ -8,4 +8,7 @@
     <color name="drawerIconColor">#ffffff</color>
 
     <color name="bgColor">#ffffff</color>
+
+    <color name="grayColor">#888888</color>
+    <color name="darkGrayColor">#E0E0E0</color>
 </resources>
