@@ -22,5 +22,4 @@ public class Constants {
     public static final int TAG_FAV = 1;
     public static final int TAG_NOT_FAV = 0;
 
-
 }

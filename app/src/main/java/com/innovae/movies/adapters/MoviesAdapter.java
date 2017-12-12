@@ -1,13 +1,16 @@
 package com.innovae.movies.adapters;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -85,9 +88,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
                 moviePoster.getLayoutParams().height = (int) (moviePosterWidth * 1.51);
             }
 
-            //Log.d(TAG,"moviePosterWidth "+moviePosterWidth+" "+moviePoster.getLayoutParams().height);
-
             itemView.setOnClickListener(this);
+            //Log.d(TAG,"moviePosterWidth "+moviePosterWidth+" "+moviePoster.getLayoutParams().height);
         }
 
         @Override
@@ -101,7 +103,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
             Intent detailIntent = new Intent(context, MovieDetailActivity.class);
             detailIntent.putExtra(Constants.MOVIE_ID, mMovies.get(getAdapterPosition()).getId());
             detailIntent.putExtra(Constants.MOVIE_TITLE, mMovies.get(getAdapterPosition()).getTitle());
-            context.startActivity(detailIntent);
+             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            (Activity) context,
+                            moviePoster,"poster");
+             context.startActivity(detailIntent, options.toBundle());
+            //context.startActivity(detailIntent);
+
         }
     }
 }

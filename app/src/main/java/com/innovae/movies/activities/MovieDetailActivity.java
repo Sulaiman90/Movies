@@ -1,8 +1,11 @@
 package com.innovae.movies.activities;
 
 import android.content.Intent;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.AppBarLayout.OnOffsetChangedListener;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -79,6 +83,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
+        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+            postponeEnterTransition();
+        }
+        else{
+            supportPostponeEnterTransition();
+        }
+
         mReleaseDate = findViewById(R.id.movie_release_date);
         mRating = findViewById(R.id.movie_rating);
         mOverview = findViewById(R.id.overview);
@@ -115,7 +126,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mCollapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         mAppBarLayout = findViewById(R.id.app_bar);
 
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        mAppBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (appBarLayout.getTotalScrollRange() + verticalOffset == 0) {
@@ -143,6 +154,22 @@ public class MovieDetailActivity extends AppCompatActivity {
             setCasts();
             setSimiliarMovies();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadMovieDetails(){
@@ -173,7 +200,24 @@ public class MovieDetailActivity extends AppCompatActivity {
                 Picasso.with(getApplicationContext()).load(backdropPath).placeholder(R.drawable.placeholder_loading).into(mBackdropImageView);
 
                 String fullPosterPath  = Utility.buildCompletePosterPath(posterPath);
-                Picasso.with(getApplicationContext()).load(fullPosterPath).placeholder(R.drawable.placeholder_loading).into(mPosterImageView);
+                Picasso.with(getApplicationContext()).load(fullPosterPath).
+                        placeholder(R.drawable.placeholder_loading).into(mPosterImageView,
+                        new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+                                    startPostponedEnterTransition();
+                                }
+                                else{
+                                    supportStartPostponedEnterTransition();
+                                }
+                            }
+
+                            @Override
+                            public void onError() {
+                               // supportStartPostponedEnterTransition();
+                            }
+                        });
 
                 String releaseString = response.body().getReleaseDate();
 

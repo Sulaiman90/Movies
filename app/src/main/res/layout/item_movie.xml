@@ -26,6 +26,7 @@
             android:id="@+id/show_card_poster"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
+            android:transitionName="poster"
             />
 
         <TextView
