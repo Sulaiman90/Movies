@@ -40,6 +40,7 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
 
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
