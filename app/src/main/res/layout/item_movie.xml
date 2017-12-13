@@ -8,7 +8,7 @@
     android:clickable="true"
     android:elevation="@dimen/card_view_elevation"
     android:focusable="true"
-    android:background="@color/darkGrayColor"
+    android:background="@color/grayColor"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/card_view_corner_radius">
 
@@ -35,8 +35,8 @@
             android:layout_height="@dimen/card_title_height"
             android:layout_marginLeft="@dimen/card_title_margin"
             android:layout_marginRight="@dimen/card_title_margin"
-            android:layout_marginTop="@dimen/card_title_margin"
-            android:layout_marginBottom="@dimen/card_title_margin"
+            android:layout_marginTop="@dimen/card_title_margin_vertical"
+            android:layout_marginBottom="@dimen/card_title_margin_vertical"
             android:ellipsize="end"
             android:maxLines="@integer/poster_title_max_lines"
             android:textColor="@android:color/black"

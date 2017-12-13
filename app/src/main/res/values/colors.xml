@@ -9,6 +9,6 @@
 
     <color name="bgColor">#ffffff</color>
 
-    <color name="grayColor">#888888</color>
-    <color name="darkGrayColor">#E0E0E0</color>
+    <color name="grayColor">#9E9E9E</color>
+    <color name="darkGrayColor">#BDBDBD</color>
 </resources>

@@ -22,6 +22,10 @@ android {
 ext {
     supportLibraryVersion = "26.1.0"
     retrofitVersion = "2.3.0"
+    rxJavaVersion = "1.2.2"
+    rxAndroidVersion = "1.2.1"
+    rxLifecycleVersion = "1.0"
+    rxBindingsVersion = "0.4.0"
 }
 
 dependencies {
@@ -38,8 +42,6 @@ dependencies {
 
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
-
-
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 
