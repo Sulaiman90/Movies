@@ -22,10 +22,6 @@ android {
 ext {
     supportLibraryVersion = "26.1.0"
     retrofitVersion = "2.3.0"
-    rxJavaVersion = "1.2.2"
-    rxAndroidVersion = "1.2.1"
-    rxLifecycleVersion = "1.0"
-    rxBindingsVersion = "0.4.0"
 }
 
 dependencies {

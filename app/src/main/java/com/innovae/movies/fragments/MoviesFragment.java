@@ -56,8 +56,6 @@ public class MoviesFragment extends Fragment {
 
     private static final String TAG = MoviesFragment.class.getSimpleName();
 
-    private static final int SEARCH_QUERY_DELAY_MILLIS = 400;
-
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private ApiInterface apiInterface;
@@ -143,9 +141,6 @@ public class MoviesFragment extends Fragment {
         if (!isConnected) {
             showConnectionStatus(false);
         }
-        else{
-            //loadMovies();
-        }
 
         connectionReceiver = new ConnectivityReceiver(new ConnectivityReceiver.ConnectivityReceiverCallback(){
 
@@ -187,7 +182,7 @@ public class MoviesFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.sort,menu);
+        inflater.inflate(R.menu.main,menu);
 
        /* SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         SearchManager searchManager = (SearchManager)  getActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -214,7 +209,7 @@ public class MoviesFragment extends Fragment {
 
         mProgressBar.setVisibility(View.VISIBLE);
 
-        Log.d(TAG,"getMovieLanguagePreference "+PreferenceUtil.getMovieLanguagePreference(getContext()).toString());
+       // Log.d(TAG,"getMovieLanguagePreference "+PreferenceUtil.getMovieLanguagePreference(getContext()).toString());
 
         moviesResponseCall = apiInterface.discoverMovies(Constants.MOVIE_DB_API_KEY,
                 PreferenceUtil.getSortByPreference(getContext()).toString(),
@@ -242,7 +237,7 @@ public class MoviesFragment extends Fragment {
                     pagesOver = true;
                 else
                     presentPage++;
-                Log.d(TAG, "totalPages " + response.body().getTotalPages() + " Movies received: " + mMovies.size());
+               // Log.d(TAG, "totalPages " + response.body().getTotalPages() + " Movies received: " + mMovies.size());
             }
 
             @Override

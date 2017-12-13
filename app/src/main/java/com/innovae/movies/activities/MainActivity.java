@@ -57,12 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        navigationView.setCheckedItem(R.id.nav_movies);
-    }
-
-    @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -83,12 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
-
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.sort,menu);
-        return true;
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -140,10 +128,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setTitle(R.string.favourites);
             setFragment(new FavouriteMoviesFragment());
         }
-       /* else if (id == R.id.nav_settings) {
-            setTitle(R.string.settings);
-            setFragment(new PreferencesFragment());
-        }*/
         else if (id == R.id.nav_share) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
