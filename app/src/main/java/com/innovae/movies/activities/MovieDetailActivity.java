@@ -215,7 +215,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                             @Override
                             public void onError() {
-                               // supportStartPostponedEnterTransition();
+                                supportStartPostponedEnterTransition();
                             }
                         });
 

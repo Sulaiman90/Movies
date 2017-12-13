@@ -88,6 +88,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
                 moviePoster.getLayoutParams().height = (int) (moviePosterWidth * 1.51);
             }
 
+
             itemView.setOnClickListener(this);
             //Log.d(TAG,"moviePosterWidth "+moviePosterWidth+" "+moviePoster.getLayoutParams().height);
         }
@@ -106,8 +107,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
              ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             (Activity) context,
                             moviePoster,"poster");
-             context.startActivity(detailIntent, options.toBundle());
-            //context.startActivity(detailIntent);
+            if(mType == SIMILAR_MOVIES) {
+                context.startActivity(detailIntent);
+            }
+            else{
+                context.startActivity(detailIntent, options.toBundle());
+            }
+
 
         }
     }
