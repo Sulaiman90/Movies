@@ -31,32 +31,32 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.innovae.movies.R;
-import com.innovae.movies.activities.MainActivity;
 import com.innovae.movies.adapters.MoviesAdapter;
 import com.innovae.movies.adapters.SearchAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.dialog.LanguageDialog;
 import com.innovae.movies.dialog.SortDialogFragment;
 import com.innovae.movies.model.DiscoverAndSearchResponse;
-import com.innovae.movies.model.Movie;
 import com.innovae.movies.model.MovieBrief;
 import com.innovae.movies.model.MoviesResponse;
 import com.innovae.movies.rest.ApiClient;
 import com.innovae.movies.rest.ApiInterface;
 import com.innovae.movies.util.Constants;
 import com.innovae.movies.util.PreferenceUtil;
-import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.Subject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
-import rx.android.schedulers.AndroidSchedulers;
 
 
 public class MoviesFragment extends Fragment {
@@ -246,7 +246,7 @@ public class MoviesFragment extends Fragment {
             .filter(query -> {
                 final boolean empty = TextUtils.isEmpty(query);
                 if (empty) {
-                    Log.d(TAG,"search empty");
+                    //Log.d(TAG,"search empty");
                     getActivity().runOnUiThread(() -> searchAdapter.clear());
                 }
                 return !empty;
@@ -257,9 +257,40 @@ public class MoviesFragment extends Fragment {
             .switchMap(query -> apiInterface.searchMovies(Constants.MOVIE_DB_API_KEY, query, 1))
             .map(DiscoverAndSearchResponse::getResults)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<List<MovieBrief>>() {
+            .subscribe(new Subject<List<MovieBrief>>() {
                 @Override
-                public void onCompleted() {
+                public boolean hasObservers() {
+                    return false;
+                }
+
+                @Override
+                public boolean hasThrowable() {
+                    return false;
+                }
+
+                @Override
+                public boolean hasComplete() {
+                    return false;
+                }
+
+                @Override
+                public Throwable getThrowable() {
+                    return null;
+                }
+
+                @Override
+                protected void subscribeActual(Observer<? super List<MovieBrief>> observer) {
+
+                }
+
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(List<MovieBrief> movies) {
+                    searchAdapter.addMovies(movies);
                 }
 
                 @Override
@@ -268,8 +299,8 @@ public class MoviesFragment extends Fragment {
                 }
 
                 @Override
-                public void onNext(List<MovieBrief> movies) {
-                    searchAdapter.addMovies(movies);
+                public void onComplete() {
+
                 }
             });
     }

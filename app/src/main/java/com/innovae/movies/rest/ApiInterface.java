@@ -8,7 +8,7 @@ import com.innovae.movies.model.MovieVideoResponse;
 import com.innovae.movies.model.MoviesResponse;
 import com.innovae.movies.model.SimiliarMoviesResponse;
 
-import rx.Observable;
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

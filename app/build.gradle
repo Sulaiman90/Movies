@@ -32,9 +32,9 @@ android {
 ext {
     supportLibraryVersion = "26.1.0"
     retrofitVersion = "2.3.0"
-    rxJavaVersion = "1.2.2"
-    rxAndroidVersion = "1.2.1"
-    rxBindingsVersion = "0.4.0"
+    rxJavaVersion = "2.1.7"
+    rxAndroidVersion = "2.0.1"
+    rxBindingsVersion = "2.0.0"
 }
 
 dependencies {
@@ -50,7 +50,7 @@ dependencies {
 
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
-    compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
+    compile "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
 
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.2.0'
@@ -58,8 +58,8 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 
-    compile "io.reactivex:rxjava:${rxJavaVersion}"
-    compile "io.reactivex:rxandroid:${rxAndroidVersion}"
+    compile "io.reactivex.rxjava2:rxjava:${rxJavaVersion}"
+    compile "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}"
 
-    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${rxBindingsVersion}"
+    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${rxBindingsVersion}"
 }
