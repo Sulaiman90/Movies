@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.innovae.movies.R;
 import com.innovae.movies.activities.MainActivity;
 import com.innovae.movies.adapters.MoviesAdapter;
+import com.innovae.movies.adapters.SearchAdapter;
 import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.dialog.LanguageDialog;
 import com.innovae.movies.dialog.SortDialogFragment;
@@ -203,9 +204,8 @@ public class MoviesFragment extends Fragment {
         SearchView searchView = (SearchView) searchViewMenuItem.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
-        /* List searchedMovies = new ArrayList<>();
-       MoviesAdapter searchAdapter = new MoviesAdapter(getContext(),R.layout.item_movie, searchedMovies);
-        mRecyclerView.setAdapter(searchAdapter);*/
+        List<MovieBrief> searchedMovies = new ArrayList<>();
+        SearchAdapter searchAdapter = new SearchAdapter(getContext(), searchedMovies);
 
         searchViewMenuItem.setOnActionExpandListener(new OnActionExpandListener() {
             @Override
@@ -223,7 +223,7 @@ public class MoviesFragment extends Fragment {
         });
 
         searchView.setOnSearchClickListener(v -> {
-            mRecyclerView.setAdapter(null);
+            mRecyclerView.setAdapter(searchAdapter);
             //Log.d(TAG,"OnSearch ");
         });
         searchView.setOnCloseListener(() -> {
@@ -238,8 +238,8 @@ public class MoviesFragment extends Fragment {
             .filter(query -> {
                 final boolean empty = TextUtils.isEmpty(query);
                 if (empty) {
-                    clearSearchRecyclerViewAdapter();
                     Log.d(TAG,"search empty");
+                    getActivity().runOnUiThread(() -> searchAdapter.clear());
                 }
                 return !empty;
             })
@@ -261,15 +261,11 @@ public class MoviesFragment extends Fragment {
 
                 @Override
                 public void onNext(List<MovieBrief> movies) {
-                    MoviesAdapter searchAdapter = new MoviesAdapter(getContext(),R.layout.item_movie, movies);
-                    mRecyclerView.setAdapter(searchAdapter);
+                    searchAdapter.addMovies(movies);
                 }
             });
     }
 
-    private void clearSearchRecyclerViewAdapter(){
-
-    }
 
     public void showConnectionStatus(boolean isConnected){
         if(!isConnected) {
