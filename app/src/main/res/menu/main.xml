@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_search_white_24dp"
         android:id="@+id/action_search"
         android:title="@string/action_search"
-        app:showAsAction="ifRoom"
+        app:showAsAction="collapseActionView|ifRoom"
         android:orderInCategory="100"
         app:actionViewClass="android.support.v7.widget.SearchView"
         />

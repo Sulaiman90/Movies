@@ -1,6 +1,5 @@
 package com.innovae.movies.fragments;
 
-import android.app.DialogFragment;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,8 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -196,123 +194,81 @@ public class MoviesFragment extends Fragment {
         if (searchViewMenuItem != null) {
             setupSearchView(searchViewMenuItem);
         }
-
         return;
     }
 
     private void setupSearchView(MenuItem searchViewMenuItem) {
 
-        /*SearchManager searchManager = (SearchManager)  getActivity().getSystemService(Context.SEARCH_SERVICE);
-
-        SearchView searchView = (SearchView) searchViewMenuItem.getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setQueryHint("Search Movies"); // your hint here
-
-        searchView.setOnSearchClickListener(v -> {
-            //mRecyclerView.setAdapter(null);
-            // optional actions to search view expand
-        });
-        searchView.setOnCloseListener(() -> {
-            // optional actions to search view close
-            return false;
-        });
-
-        RxSearchView.queryTextChanges(searchView)
-                .debounce(400, TimeUnit.MILLISECONDS)
-                .map(CharSequence::toString)
-                .filter(query -> query.length() > 0)
-                .doOnNext(query -> Log.d("search", query))
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(Schedulers.newThread())
-                .switchMap(query -> apiInterface.searchMovies(query, null))
-                .map(MoviesResponse::getResults)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subject<List<MovieBrief>>() {
-                               @Override
-                               public boolean hasObservers() {
-                                   return false;
-                               }
-
-                               @Override
-                               public boolean hasThrowable() {
-                                   return false;
-                               }
-
-                               @Override
-                               public boolean hasComplete() {
-                                   return false;
-                               }
-
-                               @Override
-                               public Throwable getThrowable() {
-                                   return null;
-                               }
-
-                               @Override
-                               protected void subscribeActual(Observer<? super List<MovieBrief>> observer) {
-
-                               }
-
-                               @Override
-                               public void onSubscribe(Disposable d) {
-
-                               }
-
-                               @Override
-                               public void onNext(List<MovieBrief> movieBriefs) {
-                                   MoviesAdapter adapter = new MoviesAdapter(getContext(), R.layout.item_movie, movieBriefs);
-                                   mRecyclerView.setAdapter(adapter);
-                                   adapter.notifyDataSetChanged();
-                               }
-
-                               @Override
-                               public void onError(Throwable e) {
-                                   Log.e(TAG, "Error", e);
-                               }
-
-                               @Override
-                               public void onComplete() {
-                                   Log.d(TAG, "onComplete");
-                               }
-                           }
-                );*/
-
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) searchViewMenuItem.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
-        RxSearchView.queryTextChanges(searchView)
-                .debounce(400, TimeUnit.MILLISECONDS)
-                .map(CharSequence::toString)
-                .filter(query -> query.length() > 0)
-                .doOnNext(query -> Log.d("search", query))
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(Schedulers.newThread())
-                .switchMap(query -> apiInterface.searchMovies(Constants.MOVIE_DB_API_KEY, query, null))
-                .map(DiscoverAndSearchResponse::getResults)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<MovieBrief>>() {
-                    @Override
-                    public void onCompleted() {
-                        // do nothing
-                    }
+        /* List searchedMovies = new ArrayList<>();
+       MoviesAdapter searchAdapter = new MoviesAdapter(getContext(),R.layout.item_movie, searchedMovies);
+        mRecyclerView.setAdapter(searchAdapter);*/
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "Error", e);
-                    }
+        searchViewMenuItem.setOnActionExpandListener(new OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                //Log.d(TAG,"onMenuItemActionExpand ");
+                return true;
+            }
 
-                    @Override
-                    public void onNext(List<MovieBrief> movies) {
-                        MoviesAdapter adapter = new MoviesAdapter(getContext(),R.layout.item_movie, movies);
-                        mRecyclerView.setAdapter(adapter);
-                       // updateGridLayout();
-                    }
-                });
-
-        searchView.setOnSearchClickListener(view -> {
-            mRecyclerView.setAdapter(null);
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+               // Log.d(TAG,"onMenuItemActionCollapse ");
+                mRecyclerView.setAdapter(mMoviesAdapter);
+                return true;
+            }
         });
+
+        searchView.setOnSearchClickListener(v -> {
+            mRecyclerView.setAdapter(null);
+            //Log.d(TAG,"OnSearch ");
+        });
+        searchView.setOnCloseListener(() -> {
+            mRecyclerView.setAdapter(mMoviesAdapter);
+            //Log.d(TAG,"on close");
+            return false;
+        });
+
+        RxSearchView.queryTextChanges(searchView)
+            .debounce(400, TimeUnit.MILLISECONDS)
+            .map(CharSequence::toString)
+            .filter(query -> {
+                final boolean empty = TextUtils.isEmpty(query);
+                if (empty) {
+                    clearSearchRecyclerViewAdapter();
+                    Log.d(TAG,"search empty");
+                }
+                return !empty;
+            })
+            .doOnNext(query -> Log.d(TAG, "search "+query))
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.newThread())
+            .switchMap(query -> apiInterface.searchMovies(Constants.MOVIE_DB_API_KEY, query, 1))
+            .map(DiscoverAndSearchResponse::getResults)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<List<MovieBrief>>() {
+                @Override
+                public void onCompleted() {
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.e(TAG, "Error", e);
+                }
+
+                @Override
+                public void onNext(List<MovieBrief> movies) {
+                    MoviesAdapter searchAdapter = new MoviesAdapter(getContext(),R.layout.item_movie, movies);
+                    mRecyclerView.setAdapter(searchAdapter);
+                }
+            });
+    }
+
+    private void clearSearchRecyclerViewAdapter(){
+
     }
 
     public void showConnectionStatus(boolean isConnected){
