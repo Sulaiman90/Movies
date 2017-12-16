@@ -1,5 +1,6 @@
 package com.innovae.movies.rest;
 
+import com.innovae.movies.model.DiscoverAndSearchResponse;
 import com.innovae.movies.model.Movie;
 import com.innovae.movies.model.MovieBrief;
 import com.innovae.movies.model.MovieCreditsResponse;
@@ -7,6 +8,7 @@ import com.innovae.movies.model.MovieVideoResponse;
 import com.innovae.movies.model.MoviesResponse;
 import com.innovae.movies.model.SimiliarMoviesResponse;
 
+import rx.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -29,5 +31,10 @@ public interface ApiInterface {
 
     @GET("movie/{id}")
     Call<Movie> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
+
+    @GET("search/movie")
+    Observable<DiscoverAndSearchResponse<MovieBrief>> searchMovies(@Query("api_key") String apiKey,
+                                                                   @Query("query") String query,
+                                                                   @Query("page") Integer page);
 }
 
