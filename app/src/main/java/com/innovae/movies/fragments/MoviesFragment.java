@@ -86,6 +86,9 @@ public class MoviesFragment extends Fragment {
 
     private boolean pagesOver = false;
 
+    private boolean isSearchPressed = false;
+    private boolean sortChangedInSearch = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -166,14 +169,14 @@ public class MoviesFragment extends Fragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
+                if(isSearchPressed){
+                    sortChangedInSearch = !sortChangedInSearch;
+                    return;
+                }
                 if(action.equals(SortDialogFragment.BROADCAST_SORT_PREFERENCE_CHANGED) ||
                         action.equals(LanguageDialog.BROADCAST_LANGUAGE_PREFERENCE_CHANGED)){
                     if(ConnectivityReceiver.isConnected(getContext())){
-                        mMovies.clear();
-                        previousTotal = 0;
-                        loading = true;
-                        presentPage = 1;
-                        loadMovies();
+                        initLoadMovies();
                     }
                 }
             }
@@ -190,6 +193,8 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main,menu);
+
+        //Log.d(TAG , "onCreateOptionsMenu");
 
         MenuItem searchViewMenuItem = menu.findItem(R.id.action_search);
         if (searchViewMenuItem != null) {
@@ -217,17 +222,20 @@ public class MoviesFragment extends Fragment {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                // Log.d(TAG,"onMenuItemActionCollapse ");
-                mRecyclerView.setAdapter(mMoviesAdapter);
+                isSearchPressed = false;
+                setGridMoviesData();
                 return true;
             }
         });
 
         searchView.setOnSearchClickListener(v -> {
+            isSearchPressed = true;
             mRecyclerView.setAdapter(searchAdapter);
             //Log.d(TAG,"OnSearch ");
         });
         searchView.setOnCloseListener(() -> {
-            mRecyclerView.setAdapter(mMoviesAdapter);
+            isSearchPressed = false;
+            setGridMoviesData();
             //Log.d(TAG,"on close");
             return false;
         });
@@ -266,6 +274,13 @@ public class MoviesFragment extends Fragment {
             });
     }
 
+    private void setGridMoviesData(){
+        mRecyclerView.setAdapter(mMoviesAdapter);
+
+        if(sortChangedInSearch){
+            initLoadMovies();
+        }
+    }
 
     public void showConnectionStatus(boolean isConnected){
         if(!isConnected) {
@@ -279,8 +294,17 @@ public class MoviesFragment extends Fragment {
         }
     }
 
+    private void initLoadMovies(){
+        mMovies.clear();
+        previousTotal = 0;
+        loading = true;
+        presentPage = 1;
+        sortChangedInSearch = false;
+        loadMovies();
+    }
+
     public void loadMovies(){
-        // Log.d(TAG, "loadMovies()");
+        //Log.d(TAG, "loadMovies()");
         if (pagesOver) return;
 
         mProgressBar.setVisibility(View.VISIBLE);
