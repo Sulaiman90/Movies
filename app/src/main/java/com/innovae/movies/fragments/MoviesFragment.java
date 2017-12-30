@@ -79,7 +79,7 @@ public class MoviesFragment extends Fragment {
     private int presentPage = 1;
     private int previousTotal = 0;
     private boolean loading = true;
-    private int visibleThreshold = 5;
+    private int visibleThreshold = 9;
     int firstVisibleItem, visibleItemCount, totalItemCount;
 
     private Call<MoviesResponse> moviesResponseCall;

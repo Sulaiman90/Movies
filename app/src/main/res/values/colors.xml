@@ -10,5 +10,5 @@
     <color name="bgColor">#ffffff</color>
 
     <color name="grayColor">#9E9E9E</color>
-    <color name="darkGrayColor">#BDBDBD</color>
+    <color name="gray300">#BDBDBD</color>
 </resources>

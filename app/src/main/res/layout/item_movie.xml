@@ -8,7 +8,6 @@
     android:clickable="true"
     android:elevation="@dimen/card_view_elevation"
     android:focusable="true"
-    android:background="@color/grayColor"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/card_view_corner_radius">
 
@@ -17,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/darkGrayColor"
+        android:background="@color/gray300"
         >
 
         <ImageView

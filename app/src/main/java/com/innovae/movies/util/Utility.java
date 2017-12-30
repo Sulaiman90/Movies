@@ -2,8 +2,11 @@ package com.innovae.movies.util;
 
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.widget.Toast;
+
+import com.innovae.movies.R;
 
 public final class Utility {
 
@@ -12,7 +15,11 @@ public final class Utility {
     }
 
     public static String buildCompleteBackdropPath(String posterPath){
-        return Constants.IMAGE_LOADING_BASE_URL_500+posterPath;
+        return Constants.IMAGE_LOADING_BASE_URL_780+posterPath;
+    }
+
+    public static String buildTabletBackdropPathTablet(String posterPath){
+        return Constants.IMAGE_LOADING_BASE_URL_1000+posterPath;
     }
 
     public static void showDebugToast( Context context,String msg){

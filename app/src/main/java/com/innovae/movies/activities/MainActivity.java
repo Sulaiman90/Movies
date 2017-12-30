@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     doubleBackToExit = false;
                 }
             },2000);
-            super.onBackPressed();
+            //super.onBackPressed();
         }
     }
 

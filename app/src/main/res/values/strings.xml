@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Movies</string>
+    <string name="app_name">Movie Flix</string>
     <string name="no_network">No internet connection</string>
 
     <!-- menus-->
@@ -8,6 +8,8 @@
     <string name="action_language">Movie Language</string>
 
     <string name="press_again_to_exit">Press again to exit</string>
+
+    <string name="not_available">N/A</string>
 
     <!-- network connection -->
 

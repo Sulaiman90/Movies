@@ -76,6 +76,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     private List<MovieBrief> mMovies;
     private int mMovieId;
 
+    private String movie_title;
+
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
 
     @Override
@@ -100,11 +102,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         mGenre = findViewById(R.id.movie_genre);
         mRatingStar = findViewById(R.id.iv_rating);
 
-        mReleaseDate.setVisibility(View.INVISIBLE);
+       /* mReleaseDate.setVisibility(View.INVISIBLE);
         mRating.setVisibility(View.INVISIBLE);
         mOverview.setVisibility(View.INVISIBLE);
         mGenre.setVisibility(View.INVISIBLE);
-        mRatingStar.setVisibility(View.INVISIBLE);
+        mRatingStar.setVisibility(View.INVISIBLE);*/
 
         mTrailers = new ArrayList<>();
 
@@ -117,7 +119,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             finish();
         }
 
-        final String movie_title = receivedIntent.getStringExtra(Constants.MOVIE_TITLE);
+        movie_title = receivedIntent.getStringExtra(Constants.MOVIE_TITLE);
        // Utility.showDebugToast(this,movie_title + " "+movie.getBackdropPath());
 
         final Toolbar mToolbar =  findViewById(R.id.toolbar);
@@ -142,11 +144,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
-        titleView.setText(movie_title);
-
         boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
 
-        Log.d(TAG,"isConnected "+isConnected);
+      //  Log.d(TAG,"isConnected "+isConnected);
 
         if(isConnected){
             loadMovieDetails();
@@ -192,12 +192,23 @@ public class MovieDetailActivity extends AppCompatActivity {
                 String imdbId = response.body().getImdbId();
                 String posterPath = response.body().getPosterPath();
 
+                titleView.setText(movie_title);
+
                 setShareButton(title,tagLine,imdbId);
 
                 setFavouriteButton(title,posterPath);
 
                 String backdropPath = Utility.buildCompleteBackdropPath(response.body().getBackdropPath());
-                Picasso.with(getApplicationContext()).load(backdropPath).placeholder(R.drawable.placeholder_loading).into(mBackdropImageView);
+
+                boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+               // Log.d(TAG,"isTablet "+isTablet);
+
+                if(isTablet) {
+                    backdropPath = Utility.buildTabletBackdropPathTablet(response.body().getBackdropPath());
+                }
+
+                Picasso.with(getApplicationContext()).load(backdropPath).
+                        placeholder(R.drawable.placeholder_loading_backdrop).into(mBackdropImageView);
 
                 String fullPosterPath  = Utility.buildCompletePosterPath(posterPath);
                 Picasso.with(getApplicationContext()).load(fullPosterPath).
@@ -286,7 +297,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             extraText +=  Constants.IMDB_BASE_URL + imdbId + "\n";
         }
 
-        extraText += "Via - Movies App";
+        extraText+= "Via "+ getResources().getString(R.string.app_name);
 
         ImageButton mShareImageButton = findViewById(R.id.shareButton);
 
