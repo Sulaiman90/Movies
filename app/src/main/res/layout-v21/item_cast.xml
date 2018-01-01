@@ -41,4 +41,5 @@
         android:maxLines="2"
         android:textAlignment="center"
         android:textSize="12sp" />
+
 </LinearLayout>

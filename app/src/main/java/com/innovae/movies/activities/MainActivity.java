@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean doubleBackToExit = false;
     private NavigationView navigationView;
 
+    private static Toast toast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        toast = Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -64,9 +68,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
            if (doubleBackToExit){
                 super.onBackPressed();
+                if(toast != null){
+                    toast.cancel();
+                }
             }
+
+            toast.show();
             doubleBackToExit = true;
-            Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT).show();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -74,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     doubleBackToExit = false;
                 }
             },2000);
-            //super.onBackPressed();
         }
     }
 
