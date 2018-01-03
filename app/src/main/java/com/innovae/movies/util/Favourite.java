@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.innovae.movies.R;
+import com.innovae.movies.activities.MovieDetailActivity;
 import com.innovae.movies.db.MovieContract.MovieEntry;
 import com.innovae.movies.db.MovieDbHelper;
 import com.innovae.movies.model.Movie;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Favourite {
+
+    private static final String TAG = Favourite.class.getSimpleName();
 
     public static void addMovieToFavourite(Context context,Integer movieId, String posterPath,String movieName){
         if (movieId == null) return;
@@ -41,7 +45,8 @@ public class Favourite {
         long rows = db.delete(MovieEntry.FAV_MOVIES_TABLE_NAME,
                 MovieEntry.MOVIE_ID + " = ?",
                                 new String[]{String.valueOf(movieId)});
-        if(rows > 1){
+        Log.d(TAG,"rows "+rows);
+        if(rows > 0){
             Toast.makeText(context,context.getString(R.string.removed_from_favorites),Toast.LENGTH_SHORT).show();
         }
         db.close();

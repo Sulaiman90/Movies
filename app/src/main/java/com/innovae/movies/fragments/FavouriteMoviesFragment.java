@@ -55,15 +55,12 @@ public class FavouriteMoviesFragment extends Fragment {
         mMoviesAdapter = new MoviesAdapter(getContext(), R.layout.item_movie, mFavouriteMovies);
         mRecyclerView.setAdapter(mMoviesAdapter);
 
-        //loadFavouriteMovies();
-
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        //mMoviesAdapter.notifyDataSetChanged();
     }
 
     @Override
