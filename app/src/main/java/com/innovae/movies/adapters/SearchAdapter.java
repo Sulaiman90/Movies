@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.innovae.movies.R;
 import com.innovae.movies.activities.MovieDetailActivity;
@@ -82,6 +83,7 @@ public class SearchAdapter extends RecyclerView.Adapter<MovieViewHolder>{
         public void onClick(View v) {
             boolean isConnected = ConnectivityReceiver.isConnected(context);
             if(!isConnected){
+                Toast.makeText(context, context.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 return;
             }
            // Log.d(TAG,"position "+getAdapterPosition() + " title "+movie.getTitle());

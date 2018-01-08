@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.LinearLayout;
 
 import com.innovae.movies.R;
 import com.innovae.movies.adapters.MoviesAdapter;
-import com.innovae.movies.model.Movie;
 import com.innovae.movies.model.MovieBrief;
 import com.innovae.movies.util.Favourite;
 

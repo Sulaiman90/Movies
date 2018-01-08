@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -275,7 +274,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                     mGenre.setText(TextUtils.join(", ", genres));
                     mGenre.setVisibility(View.VISIBLE);
                 }
-
             }
 
             @Override
@@ -335,7 +333,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             mMovieId,
                             posterPath,
                             title);
-                    Log.d(TAG,"addMovieToFavourite: mMovieId "+mMovieId);
+                   // Log.d(TAG,"addMovieToFavourite: mMovieId "+mMovieId);
                 }
                 else{
                     mFavoriteImageButton.setTag(Constants.TAG_NOT_FAV);

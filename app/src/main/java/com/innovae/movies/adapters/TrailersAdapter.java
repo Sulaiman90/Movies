@@ -9,9 +9,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.innovae.movies.R;
 import com.innovae.movies.adapters.TrailersAdapter.TrailerViewHolder;
+import com.innovae.movies.broadcastreciever.ConnectivityReceiver;
 import com.innovae.movies.model.Video;
 import com.innovae.movies.util.Utility;
 import com.squareup.picasso.Picasso;
@@ -73,6 +75,12 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailerViewHolder>{
             trailerVideo.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    boolean isConnected = ConnectivityReceiver.isConnected(mContext);
+                    if(!isConnected){
+                        Toast.makeText(mContext, mContext.getString(R.string.no_internet_connection),
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Intent youtubeIntent = new Intent(Intent.ACTION_VIEW,
                             Utility.buildYoutubeTrailerUrl(mTrailers.get(getAdapterPosition()).getKey()));
                     mContext.startActivity(youtubeIntent);

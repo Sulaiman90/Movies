@@ -2,8 +2,6 @@ package com.innovae.movies.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.preference.PreferenceManager;
 
 import com.innovae.movies.R;
 
