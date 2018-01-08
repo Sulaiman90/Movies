@@ -3,17 +3,14 @@ package com.innovae.movies.util;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.innovae.movies.R;
-import com.innovae.movies.activities.MovieDetailActivity;
 import com.innovae.movies.db.MovieContract.MovieEntry;
 import com.innovae.movies.db.MovieDbHelper;
-import com.innovae.movies.model.Movie;
 import com.innovae.movies.model.MovieBrief;
 
 import java.util.ArrayList;

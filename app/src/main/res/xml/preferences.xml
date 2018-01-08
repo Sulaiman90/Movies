@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen >
 
-   <PreferenceCategory
+ <!--  <PreferenceCategory
         android:title="@string/night_mode_preference"
         >
 
@@ -22,6 +22,6 @@
            android:defaultValue="@string/pref_night_mode_default"
            />
 
-    </PreferenceCategory>
+    </PreferenceCategory>-->
 
 </PreferenceScreen>

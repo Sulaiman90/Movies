@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.innovae.movies.R;
 import com.innovae.movies.activities.MovieDetailActivity;
@@ -32,6 +33,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
     public final static int All_MOVIES = 1;
     public final static int SIMILAR_MOVIES = 2;
     private int mType = All_MOVIES;
+    private Toast noConnection;
 
     private static final String TAG = MoviesAdapter.class.getSimpleName();
 
@@ -51,6 +53,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(rowLayout,parent,false);
+        noConnection =  Toast.makeText(context, context.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT);
         return new MovieViewHolder(view);
     }
 
@@ -83,7 +86,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
                 moviePoster.getLayoutParams().height = (int) (moviePosterWidth * 1.51);
             }
 
-
             itemView.setOnClickListener(this);
             //Log.d(TAG,"moviePosterWidth "+moviePosterWidth+" "+moviePoster.getLayoutParams().height);
         }
@@ -92,10 +94,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
         public void onClick(View v) {
             boolean isConnected = ConnectivityReceiver.isConnected(context);
             if(!isConnected){
+                noConnection.show();
                 return;
             }
-           // Log.d(TAG,"position "+getAdapterPosition() + " title "+movie.getTitle());
-            Log.d(TAG,"MovieId "+mMovies.get(getAdapterPosition()).getId());
+            // Log.d(TAG,"position "+getAdapterPosition() + " title "+movie.getTitle());
+            // Log.d(TAG,"MovieId "+mMovies.get(getAdapterPosition()).getId());
             Intent detailIntent = new Intent(context, MovieDetailActivity.class);
             detailIntent.putExtra(Constants.MOVIE_ID, mMovies.get(getAdapterPosition()).getId());
             detailIntent.putExtra(Constants.MOVIE_TITLE, mMovies.get(getAdapterPosition()).getTitle());
@@ -108,8 +111,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder>{
             else{
                 context.startActivity(detailIntent, options.toBundle());
             }
-
-
         }
     }
 }
