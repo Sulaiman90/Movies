@@ -139,8 +139,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             String shareMsg = "";
+            shareMsg += getString(R.string.app_name) +  " - All about movies" + "\n";
             shareMsg +=  Constants.APP_PLAYSTORE_URL;
-            shareMsg +=  "\n" +" Share with your friends "+ "\n";
+            //shareMsg +=  "\n" +" Share with your friends "+ "\n";
             shareIntent.putExtra(Intent.EXTRA_TEXT,shareMsg);
             startActivity(shareIntent);
         }

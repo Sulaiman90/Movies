@@ -101,12 +101,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         mGenre = findViewById(R.id.movie_genre);
         mRatingStar = findViewById(R.id.iv_rating);
 
-       /* mReleaseDate.setVisibility(View.INVISIBLE);
-        mRating.setVisibility(View.INVISIBLE);
-        mOverview.setVisibility(View.INVISIBLE);
-        mGenre.setVisibility(View.INVISIBLE);
-        mRatingStar.setVisibility(View.INVISIBLE);*/
-
         mTrailers = new ArrayList<>();
 
         Intent receivedIntent = getIntent();
@@ -144,9 +138,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
 
         boolean isConnected = ConnectivityReceiver.isConnected(getApplicationContext());
-
       //  Log.d(TAG,"isConnected "+isConnected);
-
         if(isConnected){
             loadMovieDetails();
             setTrailers();
@@ -286,13 +278,13 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void setShareButton(String title,String tagLine,String imdbId){
         String extraText = "";
         if(title != null){
-            extraText += title + "\n";
+            extraText += title ;
         }
         if(tagLine != null){
-            extraText += tagLine + "\n";
+            extraText += "\n" + tagLine;
         }
         if(imdbId != null){
-            extraText +=  Constants.IMDB_BASE_URL + imdbId + "\n";
+            extraText +=  "\n" + Constants.IMDB_BASE_URL + imdbId + "\n";
         }
 
         extraText+= "Via "+ getResources().getString(R.string.app_name);
