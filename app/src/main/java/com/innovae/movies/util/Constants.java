@@ -22,7 +22,7 @@ public class Constants {
     public static final String YOUTUBE_THUMBNAIL_BASE_URL = "http://img.youtube.com/vi/";
     public static final String YOUTUBE_THUMBNAIL_IMAGE_QUALITY = "/hqdefault.jpg";
 
-    public static final String APP_PLAYSTORE_URL = "https://play.google.com/store/apps/details?id=com.innovae.movieflix&hl=en";
+    public static final String APP_PLAYSTORE_URL = "https://play.google.com/store/apps/details?id=com.innovae.movies";
 
     public static final String IMDB_BASE_URL = "http://www.imdb.com/title/";
     public static final int TAG_FAV = 1;
